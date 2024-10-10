@@ -7,6 +7,7 @@ import Pagination from "@/Components/Pagination";
 import SearchField from "@/Components/searchField";
 import OfficersTable from "./Partials/OfficersTable";
 import { PlusCircleIcon } from "@heroicons/react/16/solid";
+import { Button } from "@/shadcn/components/ui/button";
 
 const Index = ({ officers, queryParams = null }) => {
   queryParams = queryParams || {};
@@ -20,10 +21,10 @@ const Index = ({ officers, queryParams = null }) => {
           </h2>
 
           <Link href={route("officer.create")} className="flex justify-end">
-            <PrimaryButton>
+            <Button className="bg-green-700 hover:bg-green-500 focus:bg-green-700">
               <PlusCircleIcon className="w-[15px] mr-2" />
-              Add Officer
-            </PrimaryButton>
+              ADD OFFICER
+            </Button>
           </Link>
         </div>
       }

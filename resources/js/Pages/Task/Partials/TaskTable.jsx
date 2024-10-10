@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-} from "@/shadcn/Components/ui/table";
+} from "@/shadcn/components/ui/table";
 import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants";
 import TableHeading from "@/Components/TableHeading";
 import { router } from "@inertiajs/react";

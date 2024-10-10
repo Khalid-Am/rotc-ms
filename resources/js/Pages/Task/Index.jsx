@@ -7,6 +7,7 @@ import { PlusCircleIcon } from "@heroicons/react/16/solid";
 import SearchField from "@/Components/SearchField";
 import Pagination from "@/Components/Pagination";
 import TaskTable from "./Partials/TaskTable";
+import CreateTaskForm from "./Partials/CreateTaskForm";
 
 const Index = ({ tasks, queryParams = null }) => {
   queryParams = queryParams || {};
@@ -17,13 +18,9 @@ const Index = ({ tasks, queryParams = null }) => {
           <h2 className="text-xl font-semibold leading-tight text-gray-800">
             My Tasks
           </h2>
-
-          <Link href={route("task.create")} className="flex justify-end">
-            <PrimaryButton>
-              <PlusCircleIcon className="w-[15px] mr-2" />
-              Add Task
-            </PrimaryButton>
-          </Link>
+          <div className="flex justify-end">
+            <CreateTaskForm>ADD TASK</CreateTaskForm>
+          </div>
         </div>
       }
     >
