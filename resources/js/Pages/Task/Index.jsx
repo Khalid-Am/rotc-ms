@@ -1,9 +1,7 @@
-import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import React from "react";
 
-import { PlusCircleIcon } from "@heroicons/react/16/solid";
 import SearchField from "@/Components/SearchField";
 import Pagination from "@/Components/Pagination";
 import TaskTable from "./Partials/TaskTable";

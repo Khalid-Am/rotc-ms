@@ -50,4 +50,8 @@ class User extends Authenticatable
     public function officer() {
         return $this->belongsTo(Officer::class, 'officer_id');
     }
+
+    public function tasks() {
+        return $this->hasMany(Task::class, 'posted_by');
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -14,18 +15,17 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $query = Task::query();
+        $query = Auth::user()->tasks();
 
         $sort_field = request("sort_field", 'created_at');
-        $sort_direction = request("sort_direction", 'asc');
+        $sort_direction = request("sort_direction", 'desc');
 
         if(request("search")){
-            $query->where("firstName", "like", "%" . request("search") . "%")
-                ->orWhere("middleName", "like", "%" . request("search") . "%");
+            $query->where("title", "like", "%" . request("search") . "%");
         };
 
         $tasks = $query->orderBy($sort_field, $sort_direction)
-                        ->paginate(10)
+                        ->paginate(5)
                         ->onEachSide(1)
                         ->withQueryString();
 
@@ -48,7 +48,15 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+        $user = Auth::user();
+
+        $data = $request->validated();
+        $data['posted_at'] = now();
+
+        $user->tasks()->create($data);
+
+        return to_route('task.index');
+
     }
 
     /**
@@ -72,7 +80,11 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        $data = $request->validated();
+
+        $task->update($data);
+
+        return to_route("task.index");
     }
 
     /**
@@ -80,6 +92,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return to_route("task.index");
     }
 }

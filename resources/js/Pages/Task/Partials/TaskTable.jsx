@@ -10,9 +10,12 @@ import {
 import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants";
 import TableHeading from "@/Components/TableHeading";
 import { router } from "@inertiajs/react";
+import UpdateTaskForm from "./UpdateTaskForm";
+import { useToast } from "@/shadcn/hooks/use-toast";
 
 const TaskTable = ({ tasks, queryParams }) => {
   queryParams = queryParams || {};
+  const { toast } = useToast();
 
   const sortChanged = (name) => {
     if (name === queryParams.sort_field) {
@@ -28,6 +31,18 @@ const TaskTable = ({ tasks, queryParams }) => {
 
     router.get(route("task.index"), queryParams);
   };
+
+  const onArchive = (task) => {
+    router.delete(route("task.destroy", task.id), {
+      onSuccess: () => {
+        toast({
+          variant: "archived",
+          description: "Task was archived!",
+        });
+      },
+    });
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -63,7 +78,7 @@ const TaskTable = ({ tasks, queryParams }) => {
             name={"due_date"}
             sortChanged={sortChanged}
           >
-            Date Posted
+            Due Date
           </TableHeading>
           <TableHeading
             sort_field={queryParams.sort_field}
@@ -71,7 +86,7 @@ const TaskTable = ({ tasks, queryParams }) => {
             name={"due_date"}
             sortChanged={sortChanged}
           >
-            Due Date
+            Date Posted
           </TableHeading>
           <TableHead className="text-center">Action</TableHead>
         </TableRow>
@@ -93,10 +108,14 @@ const TaskTable = ({ tasks, queryParams }) => {
                   {TASK_STATUS_TEXT_MAP[task.status]}
                 </span>
               </TableHead>
-              <TableCell className="text-nowrap">{task.posted_at}</TableCell>
               <TableCell className="text-center">{task.due_date}</TableCell>
+              <TableCell className="text-nowrap">{task.posted_at}</TableCell>
               <TableCell className="text-center">
-                <span className="text-red-600 hover:cursor-pointer">
+                <UpdateTaskForm task={task}>Edit</UpdateTaskForm>
+                <span
+                  className="text-green-600 hover:cursor-pointer ml-2"
+                  onClick={(e) => onArchive(task)}
+                >
                   Archive
                 </span>
               </TableCell>

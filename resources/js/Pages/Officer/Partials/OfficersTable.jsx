@@ -20,10 +20,9 @@ const OfficersTable = ({ officers, queryParams }) => {
     router.delete(route("officer.destroy", officer.id), {
       onSuccess: () => {
         toast({
-          variant: "destructive",
+          variant: "archived",
           description: "Officer was archived!",
         });
-        console.log("Success");
       },
     });
   };
@@ -131,7 +130,7 @@ const OfficersTable = ({ officers, queryParams }) => {
                 </Link>
                 <span
                   onClick={(e) => onArchive(officer)}
-                  className="text-red-600 hover:cursor-pointer flex gap-1"
+                  className="text-green-600 hover:cursor-pointer flex gap-1"
                 >
                   <ArchiveBoxArrowDownIcon className="w-[15px]" />
                   <span className="mt-1">Archive</span>

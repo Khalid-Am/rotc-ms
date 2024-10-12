@@ -43,6 +43,12 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                   Officers
                 </NavLink>
+                <NavLink
+                  href={route("register")}
+                  active={route().current("register")}
+                >
+                  Users
+                </NavLink>
               </div>
             </div>
 
@@ -155,6 +161,12 @@ export default function AuthenticatedLayout({ header, children }) {
               active={route().current("officer.index")}
             >
               Officers
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("register")}
+              active={route().current("register")}
+            >
+              Users
             </ResponsiveNavLink>
           </div>
 

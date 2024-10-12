@@ -3,7 +3,7 @@ import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import React from "react";
+import React, { useState } from "react";
 
 import { Card, CardContent, CardHeader } from "@/shadcn/components/ui/card";
 import {
@@ -29,6 +29,7 @@ import { useToast } from "@/shadcn/hooks/use-toast";
 
 const Create = () => {
   const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("personal");
 
   const { data, setData, post, errors, processing } = useForm({
     student_id: "",
@@ -46,6 +47,14 @@ const Create = () => {
     region: "",
     height_cm: "",
   });
+
+  const handleNextTab = () => {
+    if (activeTab === "personal") setActiveTab("other");
+  };
+
+  const handlePreviousTab = () => {
+    if (activeTab === "other") setActiveTab("personal");
+  };
 
   const submit = (e) => {
     e.preventDefault();
@@ -82,7 +91,11 @@ const Create = () => {
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
               <form onSubmit={submit} className="space-y-6">
-                <Tabs defaultValue="personal" className="w-full">
+                <Tabs
+                  value={activeTab}
+                  onValueChange={setActiveTab}
+                  className="w-full"
+                >
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="personal">Personal</TabsTrigger>
                     <TabsTrigger value="other">Other...</TabsTrigger>
@@ -429,7 +442,17 @@ const Create = () => {
                   <Link href={route("officer.index")}>
                     <SecondaryButton>Back</SecondaryButton>
                   </Link>
-                  <PrimaryButton disabled={processing}>Add</PrimaryButton>
+                  {activeTab === "other" && (
+                    <div className="space-x-2">
+                      <SecondaryButton onClick={handlePreviousTab}>
+                        Previous
+                      </SecondaryButton>
+                      <PrimaryButton disabled={processing}>Add</PrimaryButton>
+                    </div>
+                  )}
+                  {activeTab === "personal" && (
+                    <PrimaryButton onClick={handleNextTab}>Next</PrimaryButton>
+                  )}
                 </div>
               </form>
             </div>
