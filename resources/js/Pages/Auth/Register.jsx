@@ -11,8 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shadcn/components/ui/select";
+import SearchBar from "../User/Partials/SearchBar";
+import { useToast } from "@/shadcn/hooks/use-toast";
 
-export default function Register() {
+export default function Register({ queryParams, officers }) {
+  queryParams = queryParams || {};
+  const { toast } = useToast();
+
   const { data, setData, post, processing, errors, reset } = useForm({
     officer_id: "",
     role: "",
@@ -26,17 +31,60 @@ export default function Register() {
 
     post(route("register"), {
       onFinish: () => reset("password", "password_confirmation"),
+      onSuccess: () => {
+        toast({
+          variant: "success",
+          description: "User was added successfully!",
+        });
+      },
+    });
+  };
+
+  const handleOfficerSelect = (selectedOfficer) => {
+    setData("officer_id", selectedOfficer.id);
+  };
+
+  const onArchive = (officer) => {
+    router.delete(route("officer.destroy", officer.id), {
+      onSuccess: () => {
+        toast({
+          variant: "archived",
+          description: "Officer was archived!",
+        });
+      },
     });
   };
 
   return (
-    <AuthenticatedLayout>
+    <AuthenticatedLayout
+      header={
+        <div className="grid grid-cols-2">
+          <h2 className="text-xl font-semibold leading-tight text-gray-800">
+            Add User
+          </h2>
+        </div>
+      }
+    >
       <Head title="Register" />
-      <div className="py-10">
+      <div className="py-5">
         <div className="mx-auto max-w-7xl grid lg:grid-cols-12 sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg lg:col-start-3 lg:col-span-8">
             <div className="p-6 text-gray-900">
               <form onSubmit={submit}>
+                <div className="mt-4">
+                  <InputLabel htmlFor="officer_id" value="Officer" />
+
+                  {/* searcbar will be here */}
+                  <SearchBar
+                    queryParams={queryParams}
+                    path="register"
+                    className="mt-1 block w-full"
+                    onSelect={handleOfficerSelect}
+                  />
+
+                  <InputError message={errors.officer_id} className="mt-2" />
+                </div>
+
                 <div className="mt-4">
                   <InputLabel htmlFor="role" value="Role" />
                   <Select onValueChange={(value) => setData("role", value)}>
@@ -64,7 +112,6 @@ export default function Register() {
                     name="username"
                     value={data.username}
                     className="mt-1 block w-full"
-                    autoComplete="username"
                     onChange={(e) => setData("username", e.target.value)}
                     required
                   />
@@ -81,7 +128,6 @@ export default function Register() {
                     name="password"
                     value={data.password}
                     className="mt-1 block w-full"
-                    autoComplete="new-password"
                     onChange={(e) => setData("password", e.target.value)}
                     required
                   />
@@ -101,7 +147,6 @@ export default function Register() {
                     name="password_confirmation"
                     value={data.password_confirmation}
                     className="mt-1 block w-full"
-                    autoComplete="new-password"
                     onChange={(e) =>
                       setData("password_confirmation", e.target.value)
                     }
@@ -124,6 +169,7 @@ export default function Register() {
 
                   <PrimaryButton className="ms-4" disabled={processing}>
                     Register
+                    {console.log(data)}
                   </PrimaryButton>
                 </div>
               </form>

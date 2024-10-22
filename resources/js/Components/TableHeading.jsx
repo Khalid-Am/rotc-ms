@@ -12,7 +12,7 @@ const TableHeading = ({
 }) => {
   return (
     <TableHead onClick={(e) => sortChanged(name)}>
-      <div className="flex items-center justify-between cursor-pointer text-nowrap">
+      <div className="flex items-center justify-around cursor-pointer text-nowrap">
         {children}
         {sortable && (
           <div className="ml-1">

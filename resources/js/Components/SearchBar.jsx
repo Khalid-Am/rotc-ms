@@ -1,8 +1,8 @@
+import React from "react";
 import { router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
-import React from "react";
 
-const SearchField = ({ queryParams = null, path = "", className }) => {
+const SearchBar = ({ queryParams = null, path = "", className }) => {
   queryParams = queryParams || {};
   const searchFieldChanged = (name, value) => {
     if (value) {
@@ -29,4 +29,4 @@ const SearchField = ({ queryParams = null, path = "", className }) => {
   );
 };
 
-export default SearchField;
+export default SearchBar;

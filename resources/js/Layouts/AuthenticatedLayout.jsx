@@ -44,8 +44,8 @@ export default function AuthenticatedLayout({ header, children }) {
                   Officers
                 </NavLink>
                 <NavLink
-                  href={route("register")}
-                  active={route().current("register")}
+                  href={route("user.index")}
+                  active={route().current("user.index")}
                 >
                   Users
                 </NavLink>
@@ -84,7 +84,9 @@ export default function AuthenticatedLayout({ header, children }) {
                   </Dropdown.Trigger>
 
                   <Dropdown.Content>
-                    <Dropdown.Link href={route("profile.edit")}>
+                    <Dropdown.Link
+                      href={route("officer.show", user.data.officer.id)}
+                    >
                       Profile
                     </Dropdown.Link>
                     <Dropdown.Link
@@ -163,8 +165,8 @@ export default function AuthenticatedLayout({ header, children }) {
               Officers
             </ResponsiveNavLink>
             <ResponsiveNavLink
-              href={route("register")}
-              active={route().current("register")}
+              href={route("user.index")}
+              active={route().current("user.index")}
             >
               Users
             </ResponsiveNavLink>

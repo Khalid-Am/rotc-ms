@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->enum('role', ['corps', 's1', 's2', 's3', 's4', 's7']);
             $table->string('username')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->softDeletes();

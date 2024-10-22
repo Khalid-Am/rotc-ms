@@ -4,7 +4,7 @@ import { Head, Link } from "@inertiajs/react";
 import React from "react";
 
 import Pagination from "@/Components/Pagination";
-import SearchField from "@/Components/searchField";
+import SearchBar from "@/Components/SearchBar";
 import OfficersTable from "./Partials/OfficersTable";
 import { PlusCircleIcon } from "@heroicons/react/16/solid";
 import { Button } from "@/shadcn/components/ui/button";
@@ -36,7 +36,7 @@ const Index = ({ officers, queryParams = null }) => {
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
               <div className="grid grid-cols-12 gap-3">
-                <SearchField
+                <SearchBar
                   queryParams={queryParams}
                   path={"officer.index"}
                   className="mb-2 col-span-12 md:col-span-5 lg:col-span-4"
