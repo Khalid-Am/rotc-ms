@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
@@ -17,11 +18,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware(['auth', 'verified'])->group(function() {
+    Route::get('/dashboard', [GeneralController::class, 'dashboard'])->name('dashboard');
     Route::resource('officer', OfficerController::class);
     Route::resource('task', TaskController::class);
     Route::resource('user', UserController::class);
