@@ -1,6 +1,6 @@
 import BreadCrumbExt from "@/Components/BreadCrumbExt";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import React from "react";
+import React, { useState } from "react";
 
 import { Button } from "@/shadcn/components/ui/button";
 import {
@@ -21,8 +21,11 @@ import { Head, Link } from "@inertiajs/react";
 import SecondaryButton from "@/Components/SecondaryButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { BLOOD_TYPE_TEXT_MAP } from "@/constants";
+import OfficersAttendanceTable from "./Partials/OfficersAttendanceTable";
 
-const Show = ({ officer }) => {
+const Show = ({ officer, attendances }) => {
+  const [activeTab, setActiveTab] = useState("details");
+
   return (
     <AuthenticatedLayout
       header={
@@ -46,7 +49,11 @@ const Show = ({ officer }) => {
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-4 text-gray-900">
-              <Tabs defaultValue="details" className="w-full">
+              <Tabs
+                defaultValue={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full"
+              >
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="attendance">Attendance</TabsTrigger>
@@ -201,17 +208,35 @@ const Show = ({ officer }) => {
                       </div>
                     </CardContent>
                   </Card>
-                  <CardFooter className="flex justify-end gap-3 my-4">
-                    <Link href={route("officer.index")}>
-                      <SecondaryButton>Back</SecondaryButton>
-                    </Link>
-                    <Link href={route("officer.edit", officer.id)}>
-                      <SecondaryButton>Edit</SecondaryButton>
-                    </Link>
-                  </CardFooter>
                 </TabsContent>
 
-                <TabsContent value="attendance"></TabsContent>
+                <TabsContent value="attendance">
+                  <Card>
+                    <CardHeader className="flex">
+                      <CardDescription>Attendance Record</CardDescription>
+                      <CardTitle className="inline">
+                        {`${officer.rank ?? ""} ${officer.firstName} 
+                        ${officer.middleName ?? ""} ${officer.lastName} ${
+                          officer.class ?? ""
+                        }`}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <OfficersAttendanceTable attendances={attendances} />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <CardFooter className="flex justify-end gap-3 my-4">
+                  <Link href={route("officer.index")}>
+                    <SecondaryButton>Back</SecondaryButton>
+                  </Link>
+                  {activeTab === "details" && (
+                    <Link href={route("officer.edit", officer.id)}>
+                      <PrimaryButton>Edit</PrimaryButton>
+                    </Link>
+                  )}
+                </CardFooter>
               </Tabs>
             </div>
           </div>

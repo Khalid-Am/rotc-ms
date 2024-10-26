@@ -6,6 +6,8 @@ use App\Models\Officer;
 use App\Http\Requests\StoreOfficerRequest;
 use App\Http\Requests\UpdateOfficerRequest;
 use App\Http\Resources\OfficerResource;
+use App\Models\Attendance;
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class OfficerController extends Controller
@@ -63,8 +65,22 @@ class OfficerController extends Controller
      */
     public function show(Officer $officer)
     {
+        
+        $attendances = $officer->attendances()->latest()->paginate(10);
+    
+        // Transform the collection while keeping pagination metadata
+        $attendances->getCollection()->transform(function ($attendance) {
+            // Format the signed_at date and time
+            $attendance->date = Carbon::parse($attendance->signed_at)->format('Y-m-d'); // Format as YYYY-MM-DD
+            $attendance->time = Carbon::parse($attendance->signed_at)->format('H:i:s'); // Format as HH:MM:SS
+            return $attendance;
+        });
+
+        // dd($attendances);
+
         return inertia('Officer/Show', [
             'officer' => new OfficerResource($officer),
+            'attendances' => $attendances,
         ]);
     }
 
