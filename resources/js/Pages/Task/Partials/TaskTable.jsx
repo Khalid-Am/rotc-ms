@@ -13,7 +13,12 @@ import { router } from "@inertiajs/react";
 import UpdateTaskForm from "./UpdateTaskForm";
 import { useToast } from "@/shadcn/hooks/use-toast";
 
-const TaskTable = ({ tasks, queryParams }) => {
+const TaskTable = ({
+  tasks,
+  queryParams,
+  showIdColumn = true,
+  showActionColumn = true,
+}) => {
   queryParams = queryParams || {};
   const { toast } = useToast();
 
@@ -47,14 +52,16 @@ const TaskTable = ({ tasks, queryParams }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHeading
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            name={"id"}
-            sortChanged={sortChanged}
-          >
-            ID
-          </TableHeading>
+          {showIdColumn && (
+            <TableHeading
+              sort_field={queryParams.sort_field}
+              sort_direction={queryParams.sort_direction}
+              name={"id"}
+              sortChanged={sortChanged}
+            >
+              ID
+            </TableHeading>
+          )}
           <TableHeading
             sort_field={queryParams.sort_field}
             sort_direction={queryParams.sort_direction}
@@ -83,19 +90,23 @@ const TaskTable = ({ tasks, queryParams }) => {
           <TableHeading
             sort_field={queryParams.sort_field}
             sort_direction={queryParams.sort_direction}
-            name={"due_date"}
+            name={"posted_at"}
             sortChanged={sortChanged}
           >
             Date Posted
           </TableHeading>
-          <TableHead className="text-center">Action</TableHead>
+          {showActionColumn && (
+            <TableHead className="text-center">Action</TableHead>
+          )}
         </TableRow>
       </TableHeader>
       <TableBody>
         {tasks.data.length > 0 ? (
           tasks.data.map((task) => (
             <TableRow key={task.id}>
-              <TableCell className="font-medium">{task.id}</TableCell>
+              {showIdColumn && (
+                <TableCell className="font-medium">{task.id}</TableCell>
+              )}
               <TableCell>{task.title}</TableCell>
               <TableCell>{task.description}</TableCell>
               <TableHead className="text-nowrap">
@@ -110,15 +121,17 @@ const TaskTable = ({ tasks, queryParams }) => {
               </TableHead>
               <TableCell className="text-center">{task.due_date}</TableCell>
               <TableCell className="text-nowrap">{task.posted_at}</TableCell>
-              <TableCell className="text-center">
-                <UpdateTaskForm task={task}>Edit</UpdateTaskForm>
-                <span
-                  className="text-green-600 hover:cursor-pointer ml-2"
-                  onClick={(e) => onArchive(task)}
-                >
-                  Archive
-                </span>
-              </TableCell>
+              {showActionColumn && (
+                <TableCell className="text-center">
+                  <UpdateTaskForm task={task}>Edit</UpdateTaskForm>
+                  <span
+                    className="text-green-600 hover:cursor-pointer ml-2"
+                    onClick={(e) => onArchive(task)}
+                  >
+                    Archive
+                  </span>
+                </TableCell>
+              )}
             </TableRow>
           ))
         ) : (
