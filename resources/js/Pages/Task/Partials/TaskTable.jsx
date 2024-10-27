@@ -70,7 +70,7 @@ const TaskTable = ({
           </TableHeading>
           <TableHeading
             name={"posted_at"}
-            ueryParams={queryParams}
+            queryParams={queryParams}
             path="task.index"
           >
             Date Posted
