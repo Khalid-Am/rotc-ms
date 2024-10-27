@@ -18,6 +18,7 @@ const TaskTable = ({
   queryParams,
   showIdColumn = true,
   showActionColumn = true,
+  path,
 }) => {
   queryParams = queryParams || {};
   const { toast } = useToast();
@@ -38,40 +39,24 @@ const TaskTable = ({
       <TableHeader>
         <TableRow>
           {showIdColumn && (
-            <TableHeading
-              name={"id"}
-              queryParams={queryParams}
-              path="task.index"
-            >
+            <TableHeading name={"id"} queryParams={queryParams} path={path}>
               ID
             </TableHeading>
           )}
-          <TableHeading
-            name={"title"}
-            queryParams={queryParams}
-            path="task.index"
-          >
+          <TableHeading name={"title"} queryParams={queryParams} path={path}>
             Title
           </TableHeading>
           <TableHead>Description</TableHead>
-          <TableHeading
-            name={"status"}
-            queryParams={queryParams}
-            path="task.index"
-          >
+          <TableHeading name={"status"} queryParams={queryParams} path={path}>
             Status
           </TableHeading>
-          <TableHeading
-            name={"due_date"}
-            queryParams={queryParams}
-            path="task.index"
-          >
+          <TableHeading name={"due_date"} queryParams={queryParams} path={path}>
             Due Date
           </TableHeading>
           <TableHeading
             name={"posted_at"}
             queryParams={queryParams}
-            path="task.index"
+            path={path}
           >
             Date Posted
           </TableHeading>

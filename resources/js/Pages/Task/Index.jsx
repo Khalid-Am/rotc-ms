@@ -35,7 +35,11 @@ const Index = ({ tasks, queryParams = null }) => {
                   className="mb-2 col-span-10 md:col-span-5 lg:col-span-4"
                 />
               </div>
-              <TaskTable tasks={tasks} queryParams={queryParams} />
+              <TaskTable
+                tasks={tasks}
+                queryParams={queryParams}
+                path="task.index"
+              />
               <div className="my-4">
                 <Pagination links={tasks.meta.links} />
               </div>

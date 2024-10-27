@@ -23,7 +23,7 @@ const TableHeading = ({
       queryParams.sort_direction = "asc";
     }
 
-    router.get(route(path), queryParams);
+    router.get(route(path), queryParams, { preserveState: true });
   };
 
   return (
