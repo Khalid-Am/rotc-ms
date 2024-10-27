@@ -27,78 +27,57 @@ const OfficersTable = ({ officers, queryParams }) => {
     });
   };
 
-  const sortChanged = (name) => {
-    if (name === queryParams.sort_field) {
-      if (queryParams.sort_direction === "asc") {
-        queryParams.sort_direction = "desc";
-      } else {
-        queryParams.sort_direction = "asc";
-      }
-    } else {
-      queryParams.sort_field = name;
-      queryParams.sort_direction = "asc";
-    }
-
-    router.get(route("officer.index"), queryParams);
-  };
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHeading
             name="id"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="officer.index"
           >
             ID
           </TableHeading>
           <TableHeading
             name="student_id"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="officer.index"
           >
             Student ID
           </TableHeading>
           <TableHeading
             name="firstName"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="officer.index"
           >
             First Name
           </TableHeading>
           <TableHeading
             name="middleName"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="officer.index"
           >
             Middle Name
           </TableHeading>
           <TableHeading
             name="lastName"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="officer.index"
           >
             Last Name
           </TableHeading>
 
           <TableHeading
             name="rank"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="officer.index"
           >
             Rank
           </TableHeading>
           <TableHeading
             name="class"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="officer.index"
           >
             Class
           </TableHeading>

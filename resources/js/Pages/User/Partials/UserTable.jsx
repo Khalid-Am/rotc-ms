@@ -11,30 +11,13 @@ import TableHeading from "@/Components/TableHeading";
 import { router } from "@inertiajs/react";
 
 const UserTable = ({ users, queryParams }) => {
-  const sortChanged = (name) => {
-    if (name === queryParams.sort_field) {
-      if (queryParams.sort_direction === "asc") {
-        queryParams.sort_direction = "desc";
-      } else {
-        queryParams.sort_direction = "asc";
-      }
-    } else {
-      queryParams.sort_field = name;
-      queryParams.sort_direction = "asc";
-    }
+  queryParams = queryParams || {};
 
-    router.get(route("user.index"), queryParams);
-  };
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHeading
-            name="id"
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
-            sortChanged={sortChanged}
-          >
+          <TableHeading name="id" queryParams={queryParams} path="user.index">
             ID
           </TableHeading>
           <TableHead>Name</TableHead>
@@ -46,7 +29,7 @@ const UserTable = ({ users, queryParams }) => {
         {users.data.length > 0 ? (
           users.data.map((user) => (
             <TableRow key={user.id}>
-              <TableCell className="">{user?.id}</TableCell>
+              <TableCell className="">{user.id}</TableCell>
               <TableCell className="">
                 {user.officer.firstName +
                   " " +

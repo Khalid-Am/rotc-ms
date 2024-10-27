@@ -22,21 +22,6 @@ const TaskTable = ({
   queryParams = queryParams || {};
   const { toast } = useToast();
 
-  const sortChanged = (name) => {
-    if (name === queryParams.sort_field) {
-      if (queryParams.sort_direction === "asc") {
-        queryParams.sort_direction = "desc";
-      } else {
-        queryParams.sort_direction = "asc";
-      }
-    } else {
-      queryParams.sort_field = name;
-      queryParams.sort_direction = "asc";
-    }
-
-    router.get(route("task.index"), queryParams);
-  };
-
   const onArchive = (task) => {
     router.delete(route("task.destroy", task.id), {
       onSuccess: () => {
@@ -54,44 +39,39 @@ const TaskTable = ({
         <TableRow>
           {showIdColumn && (
             <TableHeading
-              sort_field={queryParams.sort_field}
-              sort_direction={queryParams.sort_direction}
               name={"id"}
-              sortChanged={sortChanged}
+              queryParams={queryParams}
+              path="task.index"
             >
               ID
             </TableHeading>
           )}
           <TableHeading
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
             name={"title"}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="task.index"
           >
             Title
           </TableHeading>
           <TableHead>Description</TableHead>
           <TableHeading
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
             name={"status"}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="task.index"
           >
             Status
           </TableHeading>
           <TableHeading
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
             name={"due_date"}
-            sortChanged={sortChanged}
+            queryParams={queryParams}
+            path="task.index"
           >
             Due Date
           </TableHeading>
           <TableHeading
-            sort_field={queryParams.sort_field}
-            sort_direction={queryParams.sort_direction}
             name={"posted_at"}
-            sortChanged={sortChanged}
+            ueryParams={queryParams}
+            path="task.index"
           >
             Date Posted
           </TableHeading>
