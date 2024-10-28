@@ -22,4 +22,12 @@ export const BLOOD_TYPE_TEXT_MAP = {
   null: "Unknown",
 };
 
-export const RANK_TEXT_MAP = {};
+export const RANK_TEXT_MAP = {
+  COL: "Colonel",
+  LTC: "Lieutenant Colonel",
+  MAJ: "Major",
+  "1LT": "1st Lieutenant",
+  "2LT": "2nd Lieutenant",
+  P2LT: "Probationary 2nd Lieutenant",
+  COCC: "Cadet Office Candidate Course",
+};
