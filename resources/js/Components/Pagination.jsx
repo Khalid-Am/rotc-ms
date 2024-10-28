@@ -2,12 +2,12 @@ import { Link, usePage } from "@inertiajs/react";
 import React from "react";
 
 const Pagination = ({ links }) => {
-
   return (
     <nav className="text-center mt-3">
       {links.map((link) => (
         <Link
           preserveScroll
+          preserveState
           href={link.url || ""}
           key={link.label}
           className={
