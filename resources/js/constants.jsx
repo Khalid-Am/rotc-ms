@@ -30,4 +30,5 @@ export const RANK_TEXT_MAP = {
   "2LT": "2nd Lieutenant",
   P2LT: "Probationary 2nd Lieutenant",
   COCC: "Cadet Office Candidate Course",
+  null: "",
 };
