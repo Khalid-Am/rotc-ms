@@ -394,24 +394,39 @@ const Create = () => {
                           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                             {/* Rank */}
                             <div>
-                              <InputLabel htmlFor="rank" value="Rank" />
-
-                              <TextInput
-                                id="rank"
-                                className="mt-1 block w-full"
-                                value={data.rank}
-                                onChange={(e) =>
-                                  setData("rank", e.target.value)
+                              <InputLabel value="Rank" />
+                              <Select
+                                onValueChange={(value) =>
+                                  setData("rank", value)
                                 }
-                                isFocused
-                              />
-
-                              <InputError
-                                className="mt-2"
-                                message={errors.rank}
-                              />
+                              >
+                                <SelectTrigger className="w-full mt-1">
+                                  <SelectValue placeholder="Rank" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    <SelectItem value="COL">Colonel</SelectItem>
+                                    <SelectItem value="LTC">
+                                      Lieutenant Colonel
+                                    </SelectItem>
+                                    <SelectItem value="MAJ">Major</SelectItem>
+                                    <SelectItem value="1LT">
+                                      1st Lieutenant
+                                    </SelectItem>
+                                    <SelectItem value="2LT">
+                                      2nd Lieutenant
+                                    </SelectItem>
+                                    <SelectItem value="P2LT">
+                                      Probationary 2nd Lieutenant
+                                    </SelectItem>
+                                    <SelectItem value="COCC">
+                                      Cadet Office Candidate Course
+                                    </SelectItem>
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
                             </div>
-                            {/* Blood Type */}
+                            {/* Class */}
                             <div>
                               <InputLabel value="Class" />
                               <Select

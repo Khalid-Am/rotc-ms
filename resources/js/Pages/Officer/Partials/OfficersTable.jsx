@@ -11,6 +11,7 @@ import { useToast } from "@/shadcn/hooks/use-toast";
 import { Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
 import { EyeIcon, ArchiveBoxArrowDownIcon } from "@heroicons/react/16/solid";
+import { RANK_TEXT_MAP } from "@/constants";
 
 const OfficersTable = ({ officers, queryParams }) => {
   queryParams = queryParams || {};
@@ -97,7 +98,9 @@ const OfficersTable = ({ officers, queryParams }) => {
                 {officer?.middleName}
               </TableCell>
               <TableCell className="text-nowrap">{officer.lastName}</TableCell>
-              <TableCell className="text-nowrap">{officer?.rank}</TableCell>
+              <TableCell className="text-nowrap">
+                {RANK_TEXT_MAP[officer.rank]}
+              </TableCell>
               <TableCell>{officer?.class}</TableCell>
               <TableCell className="flex">
                 <Link

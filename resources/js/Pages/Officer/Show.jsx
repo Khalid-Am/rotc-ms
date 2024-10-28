@@ -62,9 +62,11 @@ const Show = ({ officer, attendances }) => {
                   <Card>
                     <CardHeader>
                       <CardTitle>
-                        {`${officer.rank ?? ""} ${officer.firstName} 
+                        {`${officer.rank ? "CDT " + officer.rank : ""} ${
+                          officer.firstName
+                        } 
                         ${officer.middleName ?? ""} ${officer.lastName} ${
-                          officer.class ?? ""
+                          officer.class ? "(ROTC) " + officer.class : ""
                         }`}
                       </CardTitle>
                     </CardHeader>
@@ -213,13 +215,15 @@ const Show = ({ officer, attendances }) => {
                 <TabsContent value="attendance">
                   <Card>
                     <CardHeader className="flex">
-                      <CardDescription>Attendance Record</CardDescription>
                       <CardTitle className="inline">
-                        {`${officer.rank ?? ""} ${officer.firstName} 
+                        {`${officer.rank ? "CDT " + officer.rank : ""} ${
+                          officer.firstName
+                        } 
                         ${officer.middleName ?? ""} ${officer.lastName} ${
-                          officer.class ?? ""
+                          officer.class ? "(ROTC) " + officer.class : ""
                         }`}
                       </CardTitle>
+                      <CardDescription>Attendance Record</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <OfficersAttendanceTable attendances={attendances} />
