@@ -45,7 +45,7 @@ const UpdateTaskForm = ({ children, task }) => {
       onSuccess: () => {
         toast({
           variant: "success",
-          description: "Task was added successfully!",
+          description: "Task was updated successfully!",
         }); // Show toast on success
         setIsOpen(false);
       },
