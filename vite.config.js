@@ -10,9 +10,4 @@ export default defineConfig({
     }),
     react(),
   ],
-
-  build: {
-    outDir: "dist", // Ensure the output directory is set correctly
-    emptyOutDir: true, // Clears the output folder before each build
-  },
 });
