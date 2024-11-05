@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shadcn/components/ui/dialog";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shadcn/components/ui/alert";
 import { Button } from "@/shadcn/components/ui/button";
 import PrimaryButton from "@/Components/PrimaryButton";
 import InputError from "@/Components/InputError";
@@ -15,15 +20,21 @@ import Checkbox from "@/Components/Checkbox";
 import TextInput from "@/Components/TextInput";
 import InputLabel from "@/Components/InputLabel";
 import { useForm } from "@inertiajs/react";
+import { AlertCircle } from "lucide-react";
+import ApplicationLogo from "@/Components/ApplicationLogo";
 
-const LoginForm = () => {
+const LoginForm = ({ status }) => {
   const { data, setData, post, processing, errors, reset, clearErrors } =
     useForm({
       username: "",
       password: "",
       remember: false,
     });
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(!!status);
+
+  useEffect(() => {
+    if (status) setIsOpen(true);
+  }, [status]);
 
   const handleClose = () => {
     reset();
@@ -34,7 +45,7 @@ const LoginForm = () => {
   const submit = (e) => {
     e.preventDefault();
 
-    post(route("login"), {
+    post(route("login.store"), {
       onFinish: () => reset("password"),
     });
   };
@@ -47,9 +58,17 @@ const LoginForm = () => {
       <DialogContent>
         <DialogHeader className="grid place-items-center">
           <DialogTitle>LOGIN</DialogTitle>
+          <ApplicationLogo className="block h-auto max-w-24" />
           <DialogDescription>Welcome to ROTC-MS</DialogDescription>
         </DialogHeader>
 
+        {status && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{status}</AlertDescription>
+          </Alert>
+        )}
         <form onSubmit={submit}>
           <div>
             <InputLabel htmlFor="username" value="Username" />
@@ -96,15 +115,6 @@ const LoginForm = () => {
           </div>
 
           <div className="mt-4 flex items-center justify-end">
-            {/* {canResetPassword && (
-                        <Link
-                            href={route("password.request")}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )} */}
-
             <PrimaryButton className="ms-4" disabled={processing}>
               Log in
             </PrimaryButton>

@@ -105,7 +105,9 @@ const UpdateTaskForm = ({ children, task }) => {
                 id="due_date"
                 type="date"
                 name="due_date"
-                min={new Date().toISOString().split("T")[0]}
+                min={
+                  data.due_date ? null : new Date().toISOString().split("T")[0]
+                }
                 value={data.due_date}
                 className="mt-1 block w-full"
                 onChange={(e) => setData("due_date", e.target.value)}

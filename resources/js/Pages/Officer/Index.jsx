@@ -4,14 +4,13 @@ import { Head, Link } from "@inertiajs/react";
 import React from "react";
 
 import Pagination from "@/Components/Pagination";
-import SearchBar from "@/Components/SearchBar";
 import OfficersTable from "./Partials/OfficersTable";
 import { PlusCircleIcon } from "@heroicons/react/16/solid";
 import { Button } from "@/shadcn/components/ui/button";
+import FilterBar from "@/Components/FilterBar";
+import OfficerFilter from "./Partials/OfficerFilter";
 
-const Index = ({ officers, queryParams = null }) => {
-  queryParams = queryParams || {};
-
+const Index = ({ officers, queryParams = {} }) => {
   return (
     <AuthenticatedLayout
       header={
@@ -21,7 +20,10 @@ const Index = ({ officers, queryParams = null }) => {
           </h2>
 
           <Link href={route("officer.create")} className="flex justify-end">
-            <Button className="bg-green-700 hover:bg-green-500 focus:bg-green-700">
+            <Button
+              size="sm"
+              className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
+            >
               <PlusCircleIcon className="w-[15px] mr-2" />
               ADD OFFICER
             </Button>
@@ -31,16 +33,12 @@ const Index = ({ officers, queryParams = null }) => {
     >
       <Head title="Officers" />
 
-      <div className="py-10">
+      <div className="py-6">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
-              <div className="grid grid-cols-12 gap-3">
-                <SearchBar
-                  queryParams={queryParams}
-                  path={"officer.index"}
-                  className="mb-2 col-span-12 md:col-span-5 lg:col-span-4"
-                />
+              <div className="grid lg:grid-cols-2 pb-4">
+                <OfficerFilter queryParams={queryParams} />
               </div>
               <OfficersTable officers={officers} queryParams={queryParams} />
               <div className="my-4">

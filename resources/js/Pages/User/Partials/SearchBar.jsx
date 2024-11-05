@@ -38,11 +38,13 @@ const SearchBar = ({ queryParams = null, path = "", className, onSelect }) => {
 
   const handleRowClick = (selectedValue) => {
     setInputValue(
-      selectedValue.firstName +
-        " " +
-        selectedValue.lastName +
-        " " +
-        selectedValue.middleName
+      selectedValue.firstName
+        ? selectedValue.firstName
+        : "" + " " + selectedValue.middleName
+        ? selectedValue.middleName
+        : "" + " " + selectedValue.lastName
+        ? selectedValue.lastName
+        : ""
     );
     setResults([]);
     onSelect(selectedValue); // Notify parent about selection

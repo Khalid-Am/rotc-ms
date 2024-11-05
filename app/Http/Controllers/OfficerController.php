@@ -27,7 +27,9 @@ class OfficerController extends Controller
             $query->where("firstName", "like", "%" . request("search") . "%")
                 ->orWhere("middleName", "like", "%" . request("search") . "%")
                 ->orWhere("lastName", "like", "%" . request("search") . "%")
-                ->orWhere("student_id", "like", "%" . request("search" . "%"));
+                ->orWhere("student_id", "like", "%" . request("search") . "%")
+                ->orWhere("class", "like", "%" . request("search") . "%")
+                ->orWhere("rank", "like", "%" . request("search") . "%");
         };
 
         $officers = $query->orderBy($sort_field, $sort_direction)

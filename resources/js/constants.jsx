@@ -32,3 +32,12 @@ export const RANK_TEXT_MAP = {
   COCC: "Cadet Office Candidate Course",
   null: "",
 };
+
+export const ROLE_TEXT_MAP = {
+  corps: "Corps Commander",
+  s1: "Administrative",
+  s2: "Intelligence",
+  s3: "Operation/Planning",
+  s4: "Logistic",
+  s7: "Civil Military Operations",
+};

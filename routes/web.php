@@ -18,7 +18,7 @@ use Inertia\Inertia;
 //     ]);
 // });
 
-Route::get('/', [GeneralController::class, 'welcome'])->name('welcome');
+Route::redirect('/', 'welcome');
 
 Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/dashboard', [GeneralController::class, 'dashboard'])->name('dashboard');

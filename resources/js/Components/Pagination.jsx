@@ -6,8 +6,8 @@ const Pagination = ({ links }) => {
     <nav className="text-center mt-3">
       {links.map((link) => (
         <Link
-          preserveScroll
           preserveState
+          preserveScroll
           href={link.url || ""}
           key={link.label}
           className={

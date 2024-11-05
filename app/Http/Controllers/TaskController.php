@@ -24,6 +24,38 @@ class TaskController extends Controller
             $query->where("title", "like", "%" . request("search") . "%");
         };
 
+        if(request("status")){
+            $query->where("status", request("status"));
+        };
+
+        if(request('posted_at')) {
+            if(request('posted_at') === 'week') {
+                $query->where('posted_at', '<=', now()->subWeek());
+            }
+
+            if(request('posted_at') === 'latest') {
+                $query->where('posted_at', '>=', now()->subWeek());
+            }
+        }
+
+        if(request('due_date')){
+            if(request('due_date') === 'past_due') {
+                $query->where('due_date', '<',now()->subDay());
+            }
+
+            if(request('due_date') === 'today') {
+                $query->whereDate('due_date',now());
+            }
+
+            if (request('due_date') === 'this_week') {
+                $query->whereBetween('due_date', [now()->startOfWeek(), now()->endOfWeek()]);
+            }
+
+            if(request('due_date') === 'next_week') {
+                $query->whereDate('due_date', now()->addWeek());
+            }
+        }
+
         $tasks = $query->orderBy($sort_field, $sort_direction)
                         ->paginate(5)
                         ->onEachSide(1)

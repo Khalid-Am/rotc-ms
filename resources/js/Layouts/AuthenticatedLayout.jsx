@@ -12,6 +12,8 @@ export default function AuthenticatedLayout({ header, children }) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] =
     useState(false);
 
+  // {*bg-gradient-to-r from-[#20430F] to-[#508C38]*}
+
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="border-b border-gray-100 bg-white">
@@ -20,7 +22,7 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className="flex">
               <div className="flex shrink-0 items-center">
                 <Link href="/">
-                  <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                  <ApplicationLogo className="h-auto max-w-16" />
                 </Link>
               </div>
 
@@ -31,24 +33,28 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                   Dashboard
                 </NavLink>
-                <NavLink
-                  href={route("task.index")}
-                  active={route().current("task.index")}
-                >
-                  Tasks
-                </NavLink>
-                <NavLink
-                  href={route("officer.index")}
-                  active={route().current("officer.index")}
-                >
-                  Officers
-                </NavLink>
-                <NavLink
+                {user.data.role !== "corps" && (
+                  <NavLink
+                    href={route("task.index")}
+                    active={route().current("task.index")}
+                  >
+                    Tasks
+                  </NavLink>
+                )}
+                {(user.data.role === "corps" || user.data.role === "s1") && (
+                  <NavLink
+                    href={route("officer.index")}
+                    active={route().current("officer.index")}
+                  >
+                    Officers
+                  </NavLink>
+                )}
+                {/* <NavLink
                   href={route("user.index")}
                   active={route().current("user.index")}
                 >
                   Users
-                </NavLink>
+                </NavLink> */}
               </div>
             </div>
 
@@ -61,11 +67,9 @@ export default function AuthenticatedLayout({ header, children }) {
                         type="button"
                         className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                       >
-                        {user.data.officer.firstName +
-                          " " +
-                          user.data.officer?.middleName +
-                          " " +
-                          user.data.officer.lastName}
+                        {user.data.officer?.id
+                          ? `${user.data.officer?.firstName} ${user.data.officer?.middleName} ${user.data.officer?.lastName}`
+                          : user.data.role}
 
                         <svg
                           className="-me-0.5 ms-2 h-4 w-4"
@@ -84,11 +88,13 @@ export default function AuthenticatedLayout({ header, children }) {
                   </Dropdown.Trigger>
 
                   <Dropdown.Content>
-                    <Dropdown.Link
-                      href={route("officer.show", user.data.officer.id)}
-                    >
-                      Profile
-                    </Dropdown.Link>
+                    {user.data.officer?.id && (
+                      <Dropdown.Link
+                        href={route("officer.show", user?.data.officer.id)}
+                      >
+                        Profile
+                      </Dropdown.Link>
+                    )}
                     <Dropdown.Link
                       href={route("logout")}
                       method="post"
@@ -152,24 +158,26 @@ export default function AuthenticatedLayout({ header, children }) {
             >
               Dashboard
             </ResponsiveNavLink>
-            <ResponsiveNavLink
-              href={route("task.index")}
-              active={route().current("task.index")}
-            >
-              Tasks
-            </ResponsiveNavLink>
+            {user.data.role !== "corps" && (
+              <ResponsiveNavLink
+                href={route("task.index")}
+                active={route().current("task.index")}
+              >
+                Tasks
+              </ResponsiveNavLink>
+            )}
             <ResponsiveNavLink
               href={route("officer.index")}
               active={route().current("officer.index")}
             >
               Officers
             </ResponsiveNavLink>
-            <ResponsiveNavLink
+            {/* <ResponsiveNavLink
               href={route("user.index")}
               active={route().current("user.index")}
             >
               Users
-            </ResponsiveNavLink>
+            </ResponsiveNavLink> */}
           </div>
 
           <div className="border-t border-gray-200 pb-1 pt-4">

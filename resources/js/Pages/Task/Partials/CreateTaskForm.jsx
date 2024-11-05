@@ -21,7 +21,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import { Textarea } from "@/shadcn/components/ui/textarea";
 
 const CreateTaskForm = ({ children }) => {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, reset } = useForm({
     title: "",
     description: "",
     due_date: "",
@@ -38,8 +38,10 @@ const CreateTaskForm = ({ children }) => {
         toast({
           variant: "success",
           description: "Task was added successfully!",
+          duration: 4000,
         }); // Show toast on success
         setIsOpen(false);
+        reset();
       },
     });
   };
@@ -49,8 +51,12 @@ const CreateTaskForm = ({ children }) => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button
+            size="sm"
             className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              reset();
+            }}
           >
             <PlusCircleIcon className="w-[15px] mr-2" />
             {children}

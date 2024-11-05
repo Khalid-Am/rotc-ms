@@ -28,8 +28,8 @@ const TableHeading = ({
 
   return (
     <TableHead onClick={(e) => sortChanged(name)}>
-      <div className="flex items-center justify-around cursor-pointer text-nowrap">
-        {children}
+      <div className="flex items-center cursor-pointer text-nowrap">
+        <span>{children}</span>
         {sortable && (
           <div className="ml-1">
             <ChevronUpIcon
