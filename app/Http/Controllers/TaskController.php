@@ -56,6 +56,10 @@ class TaskController extends Controller
             }
         }
 
+        if(request('archived')) {
+            $query->onlyTrashed();
+        }
+
         $tasks = $query->orderBy($sort_field, $sort_direction)
                         ->paginate(5)
                         ->onEachSide(1)
@@ -126,6 +130,23 @@ class TaskController extends Controller
     {
         $task->delete();
 
-        return to_route("task.index");
+        return back()->with('success', 'Task was archive successfully!');
     }
+
+    public function restore($id) 
+    {
+        $task = Task::onlyTrashed()->find($id);
+        $task->restore();
+
+        return back()->with('success', 'Task was restored successfully!');
+    }
+
+    public function forceDelete($id) 
+    {
+        $task = Task::onlyTrashed()->find($id);
+        $task->forceDelete();
+
+        return back()->with('success', 'Task was permanently removed!');
+    }
+
 }

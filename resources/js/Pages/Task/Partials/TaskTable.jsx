@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableRow,
@@ -9,9 +9,15 @@ import {
 } from "@/shadcn/components/ui/table";
 import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants";
 import TableHeading from "@/Components/TableHeading";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import UpdateTaskForm from "./UpdateTaskForm";
 import { useToast } from "@/shadcn/hooks/use-toast";
+import {
+  ArchiveBoxIcon,
+  ArrowPathRoundedSquareIcon,
+  EyeIcon,
+  TrashIcon,
+} from "@heroicons/react/16/solid";
 
 const TaskTable = ({
   tasks,
@@ -22,17 +28,46 @@ const TaskTable = ({
 }) => {
   queryParams = queryParams || {};
   const { toast } = useToast();
+  const [flashMessage, setFlashMessage] = useState(null);
 
   const onArchive = (task) => {
     router.delete(route("task.destroy", task.id), {
-      onSuccess: () => {
-        toast({
-          variant: "archived",
-          description: "Task was archived!",
-        });
+      onSuccess: (page) => {
+        setFlashMessage(page.props.flash.success);
       },
     });
   };
+
+  const onRestore = (task) => {
+    router.post(
+      route("task.restore", task.id),
+      {},
+      {
+        onSuccess: (page) => {
+          setFlashMessage(page.props.flash.success);
+        },
+      }
+    );
+  };
+
+  const onForceDelete = (task) => {
+    router.post(
+      route("task.force_delete", task.id),
+      {},
+      {
+        onSuccess: (page) => {
+          setFlashMessage(page.props.flash.success);
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (flashMessage) {
+      toast({ variant: "success", description: flashMessage, duration: 4000 });
+    }
+    setFlashMessage(null);
+  }, [flashMessage]);
 
   return (
     <Table>
@@ -73,7 +108,9 @@ const TaskTable = ({
                 <TableCell className="font-medium">{task.id}</TableCell>
               )}
               <TableCell>{task.title}</TableCell>
-              <TableCell>{task.description}</TableCell>
+              <TableCell className="overflow-auto">
+                {task.description}
+              </TableCell>
               <TableHead className="text-nowrap">
                 <span
                   className={
@@ -87,14 +124,39 @@ const TaskTable = ({
               <TableCell className="text-center">{task.due_date}</TableCell>
               <TableCell className="text-nowrap">{task.posted_at}</TableCell>
               {showActionColumn && (
-                <TableCell className="text-center">
-                  <UpdateTaskForm task={task}>Edit</UpdateTaskForm>
-                  <span
-                    className="text-green-600 hover:cursor-pointer ml-2"
-                    onClick={(e) => onArchive(task)}
-                  >
-                    Archive
-                  </span>
+                <TableCell className="flex flex-col h-full gap-2 text-center">
+                  {queryParams.archived ? (
+                    <>
+                      <span
+                        className="text-green-500 cursor-pointer flex"
+                        onClick={() => onRestore(task)}
+                      >
+                        <ArrowPathRoundedSquareIcon className="h-4 w-4 mr-2" />
+                        Restore
+                      </span>
+                      <span
+                        className="text-red-500 flex cursor-pointer"
+                        onClick={() => onForceDelete(task)}
+                      >
+                        <TrashIcon className="w-4 h-4 mr-2" />
+                        Delete
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <UpdateTaskForm task={task} className="flex">
+                        <EyeIcon className="w-4 h-4 mr-2" />
+                        Edit
+                      </UpdateTaskForm>
+                      <span
+                        className="text-gray-600 cursor-pointer flex"
+                        onClick={(e) => onArchive(task)}
+                      >
+                        <ArchiveBoxIcon className="2-4 h-4 mr-2" />
+                        Archive
+                      </span>
+                    </>
+                  )}
                 </TableCell>
               )}
             </TableRow>
@@ -102,7 +164,7 @@ const TaskTable = ({
         ) : (
           <TableRow>
             <TableCell colSpan={7} className="text-center">
-              No tasks found
+              {queryParams.archived ? "No archived tasks" : "No tasks found"}
             </TableCell>
           </TableRow>
         )}

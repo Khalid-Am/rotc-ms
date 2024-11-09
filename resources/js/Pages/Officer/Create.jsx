@@ -66,6 +66,9 @@ const Create = () => {
           description: "Officer was added successfully!",
         });
       },
+      onError: () => {
+        setActiveTab("personal");
+      },
     });
   };
 

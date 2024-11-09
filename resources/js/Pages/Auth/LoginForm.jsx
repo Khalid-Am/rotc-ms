@@ -53,9 +53,14 @@ const LoginForm = ({ status }) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogTrigger asChild>
-        <Button onClick={() => setIsOpen(true)}>Login</Button>
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="bg-gradient-to-b from-green-500 to-green-600 hover:to-green-500 "
+        >
+          Login
+        </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-md">
         <DialogHeader className="grid place-items-center">
           <DialogTitle>LOGIN</DialogTitle>
           <ApplicationLogo className="block h-auto max-w-24" />
@@ -115,7 +120,10 @@ const LoginForm = ({ status }) => {
           </div>
 
           <div className="mt-4 flex items-center justify-end">
-            <PrimaryButton className="ms-4" disabled={processing}>
+            <PrimaryButton
+              className="ms-4 bg-gradient-to-b from-green-500 to-green-600"
+              disabled={processing}
+            >
               Log in
             </PrimaryButton>
           </div>

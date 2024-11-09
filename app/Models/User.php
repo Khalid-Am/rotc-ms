@@ -18,6 +18,8 @@ class User extends Authenticatable
 
     protected $cascadeDeletes = ['tasks'];
 
+    protected $dates = ['deleted_at'];
+
     /**
      * The attributes that are mass assignable.
      *

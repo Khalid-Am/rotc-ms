@@ -5,17 +5,35 @@ import React, { useState } from "react";
 
 const FilterReset = ({ queryParams, className, path }) => {
   queryParams = queryParams || {};
+
   const [queryParamsState, setQueryParamsState] = useState(() => {
     const filteredParams = Object.fromEntries(
-      Object.entries(queryParams || {}).filter(([key]) => key !== "page")
+      Object.entries(queryParams || {}).filter(
+        ([key]) => key !== "page" && key !== "archived"
+      )
     );
 
     return Object.keys(filteredParams).length > 0 ? queryParams : null;
   });
 
   const handleReset = () => {
-    setQueryParamsState(null);
-    router.get(route(path), {}, { preserveState: true });
+    setQueryParamsState((prevState) => {
+      // Filter out 'archived' from prevState
+      const filteredQueryParams = Object.fromEntries(
+        Object.entries(prevState).filter(([key]) => key === "archived")
+      );
+
+      // If there are still other query params, return them; otherwise, return null
+      return Object.keys(filteredQueryParams).length > 0
+        ? filteredQueryParams
+        : null;
+    });
+
+    const finalQuery = {
+      archived: queryParams.archived, // Keep 'archived' if it exists
+    };
+
+    router.get(route(path), finalQuery);
   };
   return (
     <>

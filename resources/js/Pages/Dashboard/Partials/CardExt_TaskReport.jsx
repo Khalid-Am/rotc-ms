@@ -9,7 +9,7 @@ import {
 import { ArrowRightCircleIcon } from "@heroicons/react/16/solid";
 import { Link } from "@inertiajs/react";
 
-const CardExt_Tasks = ({ children, count, icon, cardColor }) => {
+const CardExt_TaskReport = ({ children, count, icon, cardColor }) => {
   return (
     <Card className={`h-38 w-auto md:w-full bg-white shadow-md`}>
       <CardContent className="flex items-center pb-0">
@@ -32,4 +32,4 @@ const CardExt_Tasks = ({ children, count, icon, cardColor }) => {
   );
 };
 
-export default CardExt_Tasks;
+export default CardExt_TaskReport;

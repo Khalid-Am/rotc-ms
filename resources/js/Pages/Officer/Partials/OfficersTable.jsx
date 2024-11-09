@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,25 +8,65 @@ import {
   TableRow,
 } from "@/shadcn/components/ui/table";
 import { useToast } from "@/shadcn/hooks/use-toast";
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
-import { EyeIcon, ArchiveBoxArrowDownIcon } from "@heroicons/react/16/solid";
+import {
+  EyeIcon,
+  ArchiveBoxArrowDownIcon,
+  ArrowPathRoundedSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/16/solid";
 import { RANK_TEXT_MAP } from "@/constants";
 
 const OfficersTable = ({ officers, queryParams }) => {
   queryParams = queryParams || {};
   const { toast } = useToast();
+  const [flashMessage, setFlashMessage] = useState(null);
 
   const onArchive = (officer) => {
     router.delete(route("officer.destroy", officer.id), {
-      onSuccess: () => {
-        toast({
-          variant: "archived",
-          description: "Officer was archived!",
-        });
+      onSuccess: (page) => {
+        const message = page.props.flash.success;
+        setFlashMessage(message);
       },
     });
   };
+
+  const onRestore = (officer) => {
+    router.post(
+      route("officer.restore", officer.id),
+      {},
+      {
+        onSuccess: (page) => {
+          const message = page.props.flash.success;
+          setFlashMessage(message);
+        },
+      }
+    );
+  };
+
+  const onForceDelete = (officer) => {
+    router.post(
+      route("officer.force_delete", officer.id),
+      {},
+      {
+        onSuccess: (page) => {
+          setFlashMessage(page.props.flash.success);
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (flashMessage) {
+      toast({
+        variant: "success",
+        description: flashMessage,
+        duration: 4000,
+      });
+      setFlashMessage(null);
+    }
+  }, [flashMessage]);
 
   return (
     <Table>
@@ -102,28 +142,50 @@ const OfficersTable = ({ officers, queryParams }) => {
                 {RANK_TEXT_MAP[officer.rank]}
               </TableCell>
               <TableCell>{officer?.class}</TableCell>
-              <TableCell className="flex">
-                <Link
-                  href={route("officer.show", officer.id)}
-                  className="px-3 text-blue-700 flex gap-1"
-                >
-                  <EyeIcon className="w-[15px]" />
-                  <span className="mt-1">View</span>
-                </Link>
-                <span
-                  onClick={(e) => onArchive(officer)}
-                  className="text-green-600 hover:cursor-pointer flex gap-1"
-                >
-                  <ArchiveBoxArrowDownIcon className="w-[15px]" />
-                  <span className="mt-1">Archive</span>
-                </span>
+              <TableCell className="space-y-1">
+                {queryParams.archived ? (
+                  <>
+                    <span
+                      className="text-green-500 flex cursor-pointer"
+                      onClick={() => onRestore(officer)}
+                    >
+                      <ArrowPathRoundedSquareIcon className="h-4 w-4 mr-2" />
+                      Restore
+                    </span>
+                    <span
+                      className="text-red-500 flex cursor-pointer"
+                      onClick={() => onForceDelete(officer)}
+                    >
+                      <TrashIcon className="h-4 w-4 mr-2" /> Delete
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href={route("officer.show", officer.id)}
+                      className="text-blue-700 flex gap-1"
+                    >
+                      <EyeIcon className="w-[15px]" />
+                      <span className="mt-1">View</span>
+                    </Link>
+                    <span
+                      onClick={() => onArchive(officer)}
+                      className="text-gray-500 hover:cursor-pointer flex gap-1"
+                    >
+                      <ArchiveBoxArrowDownIcon className="w-[15px]" />
+                      <span className="mt-1">Archive</span>
+                    </span>
+                  </>
+                )}
               </TableCell>
             </TableRow>
           ))
         ) : (
           <TableRow>
             <TableCell colSpan={8} className="text-center">
-              No officer found
+              {queryParams.archived
+                ? "No archived officers."
+                : "No officers found."}
             </TableCell>
           </TableRow>
         )}

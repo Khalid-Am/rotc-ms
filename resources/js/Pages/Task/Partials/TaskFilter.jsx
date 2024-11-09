@@ -79,9 +79,9 @@ const TaskFilter = ({ queryParams }) => {
   ];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <FilterBar queryParams={queryParams} path={"task.index"} />
-      <div className="inline-block space-x-2">
+      <div className="inline-block space-x-2 space-y-2">
         <FilterChip
           queryParams={queryParams}
           items={statuses}

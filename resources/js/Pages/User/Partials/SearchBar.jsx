@@ -38,13 +38,11 @@ const SearchBar = ({ queryParams = null, path = "", className, onSelect }) => {
 
   const handleRowClick = (selectedValue) => {
     setInputValue(
-      selectedValue.firstName
-        ? selectedValue.firstName
-        : "" + " " + selectedValue.middleName
-        ? selectedValue.middleName
-        : "" + " " + selectedValue.lastName
-        ? selectedValue.lastName
-        : ""
+      (selectedValue.firstName ? selectedValue.firstName : "" + " ") +
+        " " +
+        (selectedValue.middleName ? selectedValue.middleName : "" + " ") +
+        " " +
+        (selectedValue.lastName ? selectedValue.lastName : "")
     );
     setResults([]);
     onSelect(selectedValue); // Notify parent about selection
@@ -59,21 +57,23 @@ const SearchBar = ({ queryParams = null, path = "", className, onSelect }) => {
         onChange={(e) => searchFieldChanged(e.target.value)}
       />
       {results.length > 0 && (
-        <Table>
-          <TableBody>
-            {results.map((result) => (
-              <TableRow
-                key={result.id}
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => handleRowClick(result)}
-              >
-                <TableCell>{result.firstName}</TableCell>
-                <TableCell>{result.middleName}</TableCell>
-                <TableCell>{result.lastName}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="mt-4 max-h-40 overflow-auto">
+          <Table className="h-full">
+            <TableBody>
+              {results.map((result) => (
+                <TableRow
+                  key={result.id}
+                  className="cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleRowClick(result)}
+                >
+                  <TableCell>{result.firstName}</TableCell>
+                  <TableCell>{result.middleName}</TableCell>
+                  <TableCell>{result.lastName}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
     </div>
   );

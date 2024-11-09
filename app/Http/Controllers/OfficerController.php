@@ -18,7 +18,7 @@ class OfficerController extends Controller
     public function index()
     {
 
-        $query = Officer::query();
+        $query = Officer::query()->whereNot('id', 1);
 
         $sort_field = request("sort_field", 'created_at');
         $sort_direction = request("sort_direction", 'asc');
@@ -31,6 +31,10 @@ class OfficerController extends Controller
                 ->orWhere("class", "like", "%" . request("search") . "%")
                 ->orWhere("rank", "like", "%" . request("search") . "%");
         };
+
+        if(request('archived')) {
+            $query->onlyTrashed();
+        }
 
         $officers = $query->orderBy($sort_field, $sort_direction)
                             ->paginate(5)
@@ -114,6 +118,22 @@ class OfficerController extends Controller
     {
         $officer->delete();
 
-        return to_route("officer.index");
+        return back()->with('success', 'Officer was archived!');
+    }
+
+    public function restore($id)
+    {
+        $officer = Officer::onlyTrashed()->find($id);
+        $officer->restore();
+
+        return back()->with('success', 'Officer restored successfully!');
+    }
+
+    public function forceDelete($id) 
+    {
+        $officer = Officer::onlyTrashed()->find($id);
+        $officer->forceDelete();
+
+        return back()->with('success', 'Officer deleted permanently!');
     }
 }

@@ -22,7 +22,11 @@ Route::redirect('/', 'welcome');
 
 Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/dashboard', [GeneralController::class, 'dashboard'])->name('dashboard');
+    Route::post('officer/{id}/restore', [OfficerController::class, 'restore'])->name('officer.restore');
+    Route::post('officer/{id}/force_delete', [OfficerController::class, 'forceDelete'])->name('officer.force_delete');
     Route::resource('officer', OfficerController::class);
+    Route::post('task/{id}/restore', [TaskController::class, 'restore'])->name('task.restore');
+    Route::post('task/{id}/force_delete', [TaskController::class, 'forceDelete'])->name('task.force_delete');
     Route::resource('task', TaskController::class);
     Route::resource('user', UserController::class);
 });

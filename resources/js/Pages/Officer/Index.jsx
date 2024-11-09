@@ -1,16 +1,43 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
-import React from "react";
+import { Head, Link, router } from "@inertiajs/react";
+import React, { useEffect, useState } from "react";
 
 import Pagination from "@/Components/Pagination";
 import OfficersTable from "./Partials/OfficersTable";
-import { PlusCircleIcon } from "@heroicons/react/16/solid";
+import {
+  ArchiveBoxIcon,
+  PlusCircleIcon,
+  RectangleStackIcon,
+} from "@heroicons/react/16/solid";
 import { Button } from "@/shadcn/components/ui/button";
-import FilterBar from "@/Components/FilterBar";
 import OfficerFilter from "./Partials/OfficerFilter";
 
-const Index = ({ officers, queryParams = {} }) => {
+const Index = ({ officers, queryParams = null }) => {
+  queryParams = queryParams || {};
+  const [isToggled, setIsToggled] = useState(queryParams.archived);
+
+  const searchFieldChanged = (name, value) => {
+    const newQueryParams = { ...queryParams, page: 1 };
+
+    if (value) {
+      newQueryParams[name] = value;
+    } else {
+      delete newQueryParams[name];
+    }
+    router.get(route("officer.index"), newQueryParams, { preserveState: true });
+  };
+
+  const handleArchivedState = () => {
+    setIsToggled((prevState) => {
+      const newState = !prevState;
+
+      searchFieldChanged("archived", newState ? true : null);
+
+      return newState;
+    });
+  };
+
   return (
     <AuthenticatedLayout
       header={
@@ -19,15 +46,34 @@ const Index = ({ officers, queryParams = {} }) => {
             Officers
           </h2>
 
-          <Link href={route("officer.create")} className="flex justify-end">
+          <div className="flex gap-3 justify-end">
             <Button
               size="sm"
-              className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
+              className="bg-gray-500 hover:bg-gray-400"
+              onClick={() => handleArchivedState()}
             >
-              <PlusCircleIcon className="w-[15px] mr-2" />
-              ADD OFFICER
+              {!isToggled ? (
+                <>
+                  <ArchiveBoxIcon className="w-4 h-4 mr-2" />
+                  Archived
+                </>
+              ) : (
+                <>
+                  <RectangleStackIcon className="w-4 h-4 mr-2" />
+                  All
+                </>
+              )}
             </Button>
-          </Link>
+            <Link href={route("officer.create")} className="flex justify-end">
+              <Button
+                size="sm"
+                className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
+              >
+                <PlusCircleIcon className="w-[15px] mr-2" />
+                New Officer
+              </Button>
+            </Link>
+          </div>
         </div>
       }
     >

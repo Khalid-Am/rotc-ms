@@ -26,7 +26,7 @@ import {
 } from "@/shadcn/components/ui/select";
 import { TASK_STATUS_TEXT_MAP } from "@/constants";
 
-const UpdateTaskForm = ({ children, task }) => {
+const UpdateTaskForm = ({ children, task, className }) => {
   const { data, setData, post, processing, errors } = useForm({
     title: task.title || "",
     description: task.description || "",
@@ -56,7 +56,7 @@ const UpdateTaskForm = ({ children, task }) => {
       <DialogTrigger asChild>
         <span
           onClick={() => setIsOpen(true)}
-          className="text-blue-600 hover:cursor-pointer"
+          className={`text-blue-500 hover:cursor-pointer ${className}`}
         >
           {children}
         </span>

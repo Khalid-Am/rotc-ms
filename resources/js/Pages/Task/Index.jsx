@@ -1,15 +1,38 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
-import React from "react";
+import { Head, Link, router } from "@inertiajs/react";
+import React, { useState } from "react";
 
 import Pagination from "@/Components/Pagination";
 import TaskTable from "./Partials/TaskTable";
 import CreateTaskForm from "./Partials/CreateTaskForm";
 import TaskFilter from "./Partials/TaskFilter";
 import { Button } from "@/shadcn/components/ui/button";
+import { ArchiveBoxIcon, RectangleStackIcon } from "@heroicons/react/16/solid";
 
 const Index = ({ tasks, queryParams = null }) => {
   queryParams = queryParams || {};
+
+  const [isToggled, setIsToggled] = useState(queryParams.archived);
+
+  const searchFieldChanged = (name, value) => {
+    const newQueryParams = { ...queryParams, page: 1 };
+    if (value) {
+      newQueryParams[name] = value;
+    } else {
+      delete newQueryParams[name];
+    }
+    router.get(route("task.index"), newQueryParams, { preserveState: true });
+  };
+
+  const handleArchivedState = () => {
+    setIsToggled((prevState) => {
+      const newState = !prevState;
+
+      searchFieldChanged("archived", newState ? true : null);
+
+      return newState;
+    });
+  };
 
   return (
     <AuthenticatedLayout
@@ -19,14 +42,24 @@ const Index = ({ tasks, queryParams = null }) => {
             My Tasks
           </h2>
           <div className="flex gap-3 justify-end">
-            <div>
-              <CreateTaskForm>ADD TASK</CreateTaskForm>
-            </div>
-            {/* <Link>
-              <Button className="bg-blue-500 hover:bg-blue-400 focus:bg-blue-400">
-                View Archived
-              </Button>
-            </Link> */}
+            <Button
+              size="sm"
+              className="bg-gray-500 hover:bg-gray-400"
+              onClick={() => handleArchivedState()}
+            >
+              {!isToggled ? (
+                <>
+                  <ArchiveBoxIcon className="w-4 h-4 mr-2" />
+                  Archived
+                </>
+              ) : (
+                <>
+                  <RectangleStackIcon className="w-4 h-4 mr-2" />
+                  All
+                </>
+              )}
+            </Button>
+            <CreateTaskForm>New Task</CreateTaskForm>
           </div>
         </div>
       }

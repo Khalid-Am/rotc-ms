@@ -1,31 +1,30 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
-import DeleteUserForm from "./Partials/DeleteUserForm";
+// import DeleteUserForm from "./Partials/DeleteUserForm";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
-import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
-import UpdateOfficerForm from "../Officer/Partials/UpdateOfficerForm";
+// import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
 
-export default function Edit({ mustVerifyEmail, status, user }) {
-  const officer = user.officer;
+export default function Edit({ user }) {
+  //   const officer = user.officer;
 
   return (
     <AuthenticatedLayout
       header={
         <h2 className="text-xl font-semibold leading-tight text-gray-800">
-          Profile
+          Account
         </h2>
       }
     >
-      <Head title="Profile" />
+      <Head title="Account" />
 
       <div className="py-5">
         <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-          <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-            {/* <UpdateOfficerForm
+          {/* <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8"> */}
+          {/* <UpdateOfficerForm
               officer={officer}
               message={"Profile was updated successfully!"}
             /> */}
-          </div>
+          {/* </div> */}
           {/* <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
             <UpdateProfileInformationForm
               mustVerifyEmail={mustVerifyEmail}
@@ -34,9 +33,9 @@ export default function Edit({ mustVerifyEmail, status, user }) {
             />
           </div> */}
 
-          {/* <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+          <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
             <UpdatePasswordForm className="max-w-xl" />
-          </div> */}
+          </div>
 
           {/* <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                         <DeleteUserForm className="max-w-xl" />

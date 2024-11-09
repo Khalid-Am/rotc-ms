@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,11 +22,47 @@ import {
   EllipsisHorizontalIcon,
   EyeIcon,
   ArchiveBoxArrowDownIcon,
+  ExclamationTriangleIcon,
+  UserIcon,
 } from "@heroicons/react/16/solid";
 import { Button } from "@/shadcn/components/ui/button";
 
-const UserTable = ({ users, queryParams }) => {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/shadcn/components/ui/alert-dialog";
+import { useToast } from "@/shadcn/hooks/use-toast";
+
+const UserTable = ({ users, queryParams, status }) => {
   queryParams = queryParams || {};
+
+  const { toast } = useToast();
+  const [flashMessage, setFlashMessage] = useState(null);
+
+  const handleArchive = (user) => {
+    router.delete(route("user.destroy", user.id), {
+      onSuccess: (page) => {
+        const message = page.props.flash.success;
+        setFlashMessage(message);
+      },
+      preserveState: true,
+      preserveScroll: true,
+    });
+  };
+
+  useEffect(() => {
+    if (flashMessage) {
+      toast({ variant: "archived", description: flashMessage, duration: 4000 });
+      setFlashMessage(null);
+    }
+  }, [flashMessage, toast]);
 
   return (
     <Table>
@@ -49,18 +85,20 @@ const UserTable = ({ users, queryParams }) => {
               </TableCell>
               <TableCell className="">{user.username}</TableCell>
               <TableCell className="text-center">
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <div className="p-2 text-center rounded-md hover:bg-gray-200">
-                      <EllipsisHorizontalIcon className="w-4" />
-                    </div>
+                <AlertDialog>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <div className="p-2 text-center rounded-md hover:bg-gray-200">
+                        <EllipsisHorizontalIcon className="w-4" />
+                      </div>
+                    </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         {user.officer?.id ? (
                           <DropdownMenuItem
-                            className="text-blue-700 focus:text-blue-500"
+                            className="text-blue-700 focus:text-blue-500 cursor-pointer"
                             onClick={() =>
                               router.get(route("officer.show", user.officer.id))
                             }
@@ -69,14 +107,36 @@ const UserTable = ({ users, queryParams }) => {
                             View
                           </DropdownMenuItem>
                         ) : null}
-                        <DropdownMenuItem className="text-green-700 focus:text-green-500">
-                          <ArchiveBoxArrowDownIcon />
-                          Archive
-                        </DropdownMenuItem>
+
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem className="text-green-700 focus:text-green-500 cursor-pointer">
+                            <ArchiveBoxArrowDownIcon />
+                            Archive
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
-                  </DropdownMenuTrigger>
-                </DropdownMenu>
+                  </DropdownMenu>
+
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        <ExclamationTriangleIcon className="text-yellow-500 w-5 h-5 mr-2 inline-block" />
+                        Are you sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Archiving this user will also archive all tasks
+                        associated with them. Are you sure you want to proceed?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleArchive(user)}>
+                        Proceed
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </TableCell>
             </TableRow>
           ))

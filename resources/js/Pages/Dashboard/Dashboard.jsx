@@ -5,10 +5,9 @@ import {
   EllipsisHorizontalCircleIcon,
   CheckCircleIcon,
   RectangleStackIcon,
-  EllipsisVerticalIcon,
   PlusIcon,
 } from "@heroicons/react/16/solid";
-import CardExt_Tasks from "./Partials/CardExt_Tasks";
+import CardExt_TaskReport from "./Partials/CardExt_TaskReport";
 import {
   Card,
   CardContent,
@@ -65,15 +64,15 @@ export default function Dashboard({
                         !isNotCorps || !isStaff1 ? "4" : "2"
                       }`}
                     >
-                      <CardExt_Tasks
+                      <CardExt_TaskReport
                         count={pendingCount}
                         icon={<ClockIcon className="w-12 text-amber-500" />}
                         cardColor="bg-amber-500"
                       >
                         Pending
-                      </CardExt_Tasks>
+                      </CardExt_TaskReport>
 
-                      <CardExt_Tasks
+                      <CardExt_TaskReport
                         count={in_progressCount}
                         icon={
                           <EllipsisHorizontalCircleIcon className="w-12 text-blue-500" />
@@ -81,9 +80,9 @@ export default function Dashboard({
                         cardColor="bg-blue-500"
                       >
                         In Progress
-                      </CardExt_Tasks>
+                      </CardExt_TaskReport>
 
-                      <CardExt_Tasks
+                      <CardExt_TaskReport
                         count={completedCount}
                         icon={
                           <CheckCircleIcon className="w-12 text-green-500" />
@@ -91,9 +90,9 @@ export default function Dashboard({
                         cardColor="bg-green-500"
                       >
                         Completed
-                      </CardExt_Tasks>
+                      </CardExt_TaskReport>
 
-                      <CardExt_Tasks
+                      <CardExt_TaskReport
                         count={tasksCount}
                         icon={
                           <RectangleStackIcon className="w-12 text-slate-700" />
@@ -101,7 +100,7 @@ export default function Dashboard({
                         cardColor="bg-slate-700"
                       >
                         Overall Tasks
-                      </CardExt_Tasks>
+                      </CardExt_TaskReport>
                     </div>
                   </CardContent>
                 </Card>
@@ -114,7 +113,7 @@ export default function Dashboard({
                     <CardContent>
                       <div className="pt-4 grid grid-cols-4 items-center">
                         <LucideUsers className="w-20 h-20 text-green-800" />
-                        <div className="col-start-2 col-span-3 self-end">
+                        <div className="pl-8 col-start-2 col-span-3 self-end md:pl-0">
                           <h1 className="text-4xl font-semibold">
                             {officerCount}
                           </h1>
@@ -138,7 +137,7 @@ export default function Dashboard({
                     <Link href={route("register")} className="flex justify-end">
                       <Button
                         size="sm"
-                        className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
+                        className="bg-gradient-to-b from-green-500 to-green-600 hover:to-green-500"
                       >
                         <PlusIcon className="w-4 pb-[2px] mr-1" />
                         ADD USER
