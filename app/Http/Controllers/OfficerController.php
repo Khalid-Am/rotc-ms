@@ -9,6 +9,7 @@ use App\Http\Resources\OfficerResource;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class OfficerController extends Controller
 {
@@ -44,6 +45,9 @@ class OfficerController extends Controller
         return inertia('Officer/Index', [
             'officers' => OfficerResource::collection($officers),
             'queryParams' => request()->query() ?: null,
+            'officersList' => Officer::where('id', '!=', 1)
+                                            ->orderBy('lastName', 'asc')
+                                            ->get(),
         ]);
     }
 
@@ -116,6 +120,19 @@ class OfficerController extends Controller
      */
     public function destroy(Officer $officer)
     {
+
+        if(Auth::user()->officer && Auth::user()->officer->id == $officer->id) {
+            $officer->delete();
+
+            Auth::guard('web')->logout();
+
+            request()->session()->invalidate();
+
+            request()->session()->regenerateToken();
+
+            return redirect()->route('welcome')->with('status', 'Your session has expired. Please log in again');
+        }
+
         $officer->delete();
 
         return back()->with('success', 'Officer was archived!');
@@ -126,7 +143,7 @@ class OfficerController extends Controller
         $officer = Officer::onlyTrashed()->find($id);
         $officer->restore();
 
-        return back()->with('success', 'Officer restored successfully!');
+        return back()->with('success', 'Officer was successfully restored!');
     }
 
     public function forceDelete($id) 
@@ -134,6 +151,6 @@ class OfficerController extends Controller
         $officer = Officer::onlyTrashed()->find($id);
         $officer->forceDelete();
 
-        return back()->with('success', 'Officer deleted permanently!');
+        return back()->with('success', 'Officer was permanently deleted!');
     }
 }

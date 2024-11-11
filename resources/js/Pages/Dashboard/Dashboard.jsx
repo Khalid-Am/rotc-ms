@@ -31,6 +31,8 @@ export default function Dashboard({
   isNotCorps,
   isStaff1,
 }) {
+  const currentDate = new Date();
+
   return (
     <AuthenticatedLayout
       header={
@@ -105,6 +107,34 @@ export default function Dashboard({
                   </CardContent>
                 </Card>
               )}
+
+              {/* Right Wing */}
+              {(!isNotCorps || isStaff1) && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex justify-between items-center">
+                      <span>Registered Users</span>
+                      <Link
+                        href={route("register")}
+                        className="flex justify-end"
+                      >
+                        <Button
+                          size="sm"
+                          className="bg-gradient-to-b from-green-500 to-green-600 hover:to-green-500"
+                        >
+                          <PlusIcon className="w-4 pb-[2px] mr-1" />
+                          ADD USER
+                        </Button>
+                      </Link>
+                    </CardTitle>
+                    <CardContent className="px-0 pt-4">
+                      <UserTable users={users} queryParams={queryParams} />
+                    </CardContent>
+                  </CardHeader>
+                </Card>
+              )}
+            </div>
+            <div className="space-y-3">
               {/* Officer Count Card*/}
               {(!isNotCorps || isStaff1) && (
                 <Card>
@@ -126,30 +156,23 @@ export default function Dashboard({
                   </CardHeader>
                 </Card>
               )}
-            </div>
 
-            {/* Right Wing */}
-            {(!isNotCorps || isStaff1) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex justify-between items-center">
-                    <span>Registered Users</span>
-                    <Link href={route("register")} className="flex justify-end">
-                      <Button
-                        size="sm"
-                        className="bg-gradient-to-b from-green-500 to-green-600 hover:to-green-500"
-                      >
-                        <PlusIcon className="w-4 pb-[2px] mr-1" />
-                        ADD USER
-                      </Button>
-                    </Link>
-                  </CardTitle>
-                  <CardContent className="px-0 pt-4">
-                    <UserTable users={users} queryParams={queryParams} />
-                  </CardContent>
-                </CardHeader>
-              </Card>
-            )}
+              {/* Attendace Record */}
+              {isStaff1 && (
+                <Card>
+                  <CardHeader className="float">
+                    <CardTitle>Attendance Report</CardTitle>
+                    <CardDescription>
+                      Today is
+                      {` ${currentDate.getDate()} ${currentDate.toLocaleString(
+                        "default",
+                        { month: "long" }
+                      )} ${currentDate.getFullYear()}`}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              )}
+            </div>
           </div>
           {/* </div> */}
         </div>
