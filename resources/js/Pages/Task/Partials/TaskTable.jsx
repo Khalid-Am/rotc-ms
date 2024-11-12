@@ -17,7 +17,21 @@ import {
   ArrowPathRoundedSquareIcon,
   EyeIcon,
   TrashIcon,
+  ArchiveBoxArrowDownIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/16/solid";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/shadcn/components/ui/alert-dialog";
 
 const TaskTable = ({
   tasks,
@@ -134,13 +148,34 @@ const TaskTable = ({
                         <ArrowPathRoundedSquareIcon className="h-4 w-4 mr-2" />
                         Restore
                       </span>
-                      <span
-                        className="text-red-500 flex cursor-pointer"
-                        onClick={() => onForceDelete(task)}
-                      >
-                        <TrashIcon className="w-4 h-4 mr-2" />
-                        Delete
-                      </span>
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <span className="text-red-500 flex cursor-pointer">
+                            <TrashIcon className="h-4 w-4 mr-2" /> Delete
+                          </span>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex">
+                              <ExclamationCircleIcon className="w-5 h-5 mr-2 self-center text-red-500" />
+                              Are you sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This task will be permanently deleted in the
+                              system. Are you sure you want to proceed?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => onForceDelete(task)}
+                              className="bg-red-500 text-white hover:bg-red-600"
+                            >
+                              Proceed
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </>
                   ) : (
                     <>
@@ -148,13 +183,32 @@ const TaskTable = ({
                         <EyeIcon className="w-4 h-4 mr-2" />
                         Edit
                       </UpdateTaskForm>
-                      <span
-                        className="text-gray-600 cursor-pointer flex"
-                        onClick={(e) => onArchive(task)}
-                      >
-                        <ArchiveBoxIcon className="2-4 h-4 mr-2" />
-                        Archive
-                      </span>
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <span className="text-gray-500 hover:cursor-pointer flex gap-1">
+                            <ArchiveBoxArrowDownIcon className="w-[15px]" />
+                            <span className="mt-1">Archive</span>
+                          </span>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex">
+                              <ExclamationTriangleIcon className="w-5 h-5 mr-2 self-center text-amber-500" />
+                              Are you sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This task will be archived. Are you sure you want
+                              to proceed?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => onArchive(task)}>
+                              Proceed
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </>
                   )}
                 </TableCell>
