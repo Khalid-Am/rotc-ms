@@ -30,6 +30,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        activity()->useLog('login')
+                    ->causedBy(auth()->user())
+                    ->withProperties(['role' => auth()->user()->role])
+                    ->log('Login');
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -38,12 +43,17 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        activity()->useLog('logout')
+                    ->causedBy(auth()->user())
+                    ->withProperties(['role' => auth()->user()->role])
+                    ->log('Logout');
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('welcome');
     }
 }

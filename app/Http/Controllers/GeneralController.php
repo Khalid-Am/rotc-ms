@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\UserResource;
+use App\Models\Attendance;
 use App\Models\Officer;
 use App\Models\Task;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +22,20 @@ class GeneralController extends Controller
         $completedCount = Auth::user()->tasks()->where('status', 'completed')->count();
         $tasksCount = Auth::user()->tasks()->count();
 
+        $attendances = [];
 
-        $users = User::where('id', '>', 1)
+        if(request('attendance_date')) {
+            $attendances = Attendance::with('signedBy')
+            ->whereDate('signed_at',  request('attendance_date'))
+            ->where('officer_id', '!=', 1)
+            ->get();
+        }
+
+        $query = User::when(request()->has('archived'), function ($query) {
+            $query->onlyTrashed();
+        });
+
+        $users = $query->where('id', '>', 1)
                             ->orderBy('role', 'asc')
                             ->paginate(10) 
                             ->onEachSide(1)
@@ -38,9 +52,11 @@ class GeneralController extends Controller
             'tasksCount' => $tasksCount,
             'users' => UserResource::collection($users),
             'userCount' => $userCount,
-            'officerCount' => $officerCount,
+            'officerCount' => $officerCount - 1,
             'isNotCorps' => Auth::user()->role !== 'corps',
             'isStaff1' => Auth::user()-> role === 's1',
+            'attendanceList' => $this->process_attendance($attendances),
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 
@@ -74,5 +90,39 @@ class GeneralController extends Controller
             'hasLogin' => Route::has('login'),
             'status' => session('status'),
         ]);
+    }
+
+    private function process_attendance($attendances) {
+
+        $attendanceSummary = [];
+
+        foreach($attendances as $attendance) {
+            
+            $userID = $attendance->signedBy->id;
+            $fullname = $attendance->signedBy->firstName . ' ' . $attendance->signedBy->middleName . ' ' . $attendance->signedBy->lastName;
+            $attendanceDate = Carbon::parse($attendance->signed_at);
+
+            if(!isset($attendanceSummary[$userID])) {
+
+                $attendanceSummary[$userID] = [
+                    'id' => $userID,
+                    'fullname' => $fullname,
+                    'date' => $attendanceDate->format('Y-m-d'),
+                    'morning' => null,
+                    'afternoon' => null,
+                ];
+            };
+
+            $isMorning = $attendanceDate->format('H') < 12;
+
+            if($isMorning) {
+                $attendanceSummary[$userID]['morning'] = "{$attendanceDate->hour}{$attendanceDate->minute}H";
+            }else {
+                $attendanceSummary[$userID]['afternoon'] = "{$attendanceDate->hour}{$attendanceDate->minute}H";
+            }
+
+        }
+
+        return array_values($attendanceSummary);
     }
 }

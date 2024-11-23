@@ -20,6 +20,7 @@ class User extends Authenticatable
 
     protected $dates = ['deleted_at'];
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -63,4 +64,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class, 'posted_by');
     }
+
 }

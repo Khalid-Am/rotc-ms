@@ -10,31 +10,39 @@ use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class OfficerController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('viewAny', Officer::class);
 
-        $query = Officer::query()->whereNot('id', 1);
+        $query = Officer::query()
+                            ->where('id', '!=', auth()->user()->officer->id)
+                            ->where('id', '!=', 1)
+                            ->when(request()->has('archived'), function ($query) {
+                                $query->onlyTrashed();
+                            });
 
         $sort_field = request("sort_field", 'created_at');
         $sort_direction = request("sort_direction", 'asc');
 
-        if(request("search")){
-            $query->where("firstName", "like", "%" . request("search") . "%")
-                ->orWhere("middleName", "like", "%" . request("search") . "%")
-                ->orWhere("lastName", "like", "%" . request("search") . "%")
-                ->orWhere("student_id", "like", "%" . request("search") . "%")
-                ->orWhere("class", "like", "%" . request("search") . "%")
-                ->orWhere("rank", "like", "%" . request("search") . "%");
-        };
-
-        if(request('archived')) {
-            $query->onlyTrashed();
+        if (request("search")) {
+            $query->where(function ($query) {
+                $searchTerm = request("search");
+                $query->where("firstName", "like", "%{$searchTerm}%")
+                    ->orWhere("middleName", "like", "%{$searchTerm}%")
+                    ->orWhere("lastName", "like", "%{$searchTerm}%")
+                    ->orWhere("student_id", "like", "%{$searchTerm}%")
+                    ->orWhere("class", "like", "%{$searchTerm}%")
+                    ->orWhere("rank", "like", "%{$searchTerm}%");
+            });
         }
 
         $officers = $query->orderBy($sort_field, $sort_direction)
@@ -45,9 +53,6 @@ class OfficerController extends Controller
         return inertia('Officer/Index', [
             'officers' => OfficerResource::collection($officers),
             'queryParams' => request()->query() ?: null,
-            'officersList' => Officer::where('id', '!=', 1)
-                                            ->orderBy('lastName', 'asc')
-                                            ->get(),
         ]);
     }
 

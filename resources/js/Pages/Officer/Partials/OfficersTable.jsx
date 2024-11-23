@@ -198,16 +198,16 @@ const OfficersTable = ({ officers, queryParams }) => {
                   <>
                     <Link
                       href={route("officer.show", officer.id)}
-                      className="text-blue-700 flex gap-1"
+                      className="text-blue-700 flex"
                     >
-                      <EyeIcon className="w-[15px]" />
-                      <span className="mt-1">View</span>
+                      <EyeIcon className="w-4 h-4 mr-2" />
+                      <span>View</span>
                     </Link>
                     <AlertDialog>
                       <AlertDialogTrigger>
-                        <span className="text-gray-500 hover:cursor-pointer flex gap-1">
-                          <ArchiveBoxArrowDownIcon className="w-[15px]" />
-                          <span className="mt-1">Archive</span>
+                        <span className="text-gray-500 hover:cursor-pointer flex">
+                          <ArchiveBoxArrowDownIcon className="w-4 h-4 mr-2" />
+                          <span>Archive</span>
                         </span>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -224,7 +224,10 @@ const OfficersTable = ({ officers, queryParams }) => {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => onArchive(officer)}>
+                          <AlertDialogAction
+                            onClick={() => onArchive(officer)}
+                            className="bg-amber-500 hover:bg-amber-600"
+                          >
                             Proceed
                           </AlertDialogAction>
                         </AlertDialogFooter>

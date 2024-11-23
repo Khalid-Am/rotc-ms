@@ -16,7 +16,7 @@ import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { useToast } from "@/shadcn/hooks/use-toast";
 
-const AttendanceForm = () => {
+const AttendanceForm = ({ className }) => {
   const { data, setData, post, processing, errors, clearErrors, reset } =
     useForm({
       student_id: "",
@@ -62,7 +62,9 @@ const AttendanceForm = () => {
     <>
       <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
         <DialogTrigger asChild>
-          <Button onClick={() => setIsOpen(true)}>Attendance</Button>
+          <Button onClick={() => setIsOpen(true)} className={className}>
+            Attendance
+          </Button>
         </DialogTrigger>
 
         <DialogContent>

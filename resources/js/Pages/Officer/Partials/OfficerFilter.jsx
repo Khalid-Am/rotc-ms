@@ -4,8 +4,6 @@ import FilterReset from "@/Components/FilterReset";
 import React from "react";
 
 const OfficerFilter = ({ queryParams }) => {
-  queryParams = queryParams || {};
-
   return (
     <div className="space-y-2">
       <FilterBar queryParams={queryParams} path={"officer.index"} />

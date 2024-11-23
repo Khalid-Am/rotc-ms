@@ -7,11 +7,20 @@ import Pagination from "@/Components/Pagination";
 import OfficersTable from "./Partials/OfficersTable";
 import {
   ArchiveBoxIcon,
+  ChevronDownIcon,
   PlusCircleIcon,
   RectangleStackIcon,
 } from "@heroicons/react/16/solid";
 import { Button } from "@/shadcn/components/ui/button";
 import OfficerFilter from "./Partials/OfficerFilter";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/shadcn/components/ui/dropdown-menu";
 
 const Index = ({ officers, queryParams = null }) => {
   queryParams = queryParams || {};
@@ -41,15 +50,17 @@ const Index = ({ officers, queryParams = null }) => {
   return (
     <AuthenticatedLayout
       header={
-        <div className="grid grid-cols-2">
-          <h2 className="text-xl font-semibold leading-tight text-gray-800">
-            Officers
-          </h2>
+        <div className="grid grid-cols-2 items-center">
+          <div>
+            <h2 className="text-xl font-semibold leading-tight text-gray-800">
+              Officers
+            </h2>
+          </div>
 
           <div className="flex gap-3 justify-end">
             <Button
               size="sm"
-              className="bg-gray-500 hover:bg-gray-400"
+              className="bg-gray-500 hover:bg-gray-600"
               onClick={() => handleArchivedState()}
             >
               {!isToggled ? (
@@ -65,10 +76,7 @@ const Index = ({ officers, queryParams = null }) => {
               )}
             </Button>
             <Link href={route("officer.create")} className="flex justify-end">
-              <Button
-                size="sm"
-                className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
-              >
+              <Button size="sm" className="bg-green-500 hover:bg-green-600">
                 <PlusCircleIcon className="w-[15px] mr-2" />
                 New Officer
               </Button>
@@ -83,8 +91,63 @@ const Index = ({ officers, queryParams = null }) => {
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
-              <div className="grid lg:grid-cols-2 pb-4">
+              <div className="grid items-center lg:grid-cols-2 pb-4">
                 <OfficerFilter queryParams={queryParams} />
+                <div className="flex justify-end">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="flex items-center bg-green-400 rounded-md py-1 px-2 text-white text-md hover:bg-green-500">
+                      Print
+                      <ChevronDownIcon className="ml-2 w-4 h-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <a
+                        href={route("officers_list.pdf")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <DropdownMenuItem className="cursor-pointer">
+                          <span className="text-sm">Officers List</span>
+                        </DropdownMenuItem>
+                      </a>
+                      <a
+                        href={route("1cl_list.pdf")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <DropdownMenuItem className="cursor-pointer">
+                          <span className="text-sm">1CL List</span>
+                        </DropdownMenuItem>
+                      </a>
+                      <a
+                        href={route("2cl_list.pdf")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <DropdownMenuItem className="cursor-pointer">
+                          <span className="text-sm">2CL List</span>
+                        </DropdownMenuItem>
+                      </a>
+                      <a
+                        href={route("3cl_list.pdf")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <DropdownMenuItem className="cursor-pointer">
+                          <span className="text-sm">3CL List</span>
+                        </DropdownMenuItem>
+                      </a>
+                      <a
+                        href={route("cocc_list.pdf")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <DropdownMenuItem className="cursor-pointer">
+                          <span className="text-sm">COCC List</span>
+                        </DropdownMenuItem>
+                      </a>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
               <OfficersTable officers={officers} queryParams={queryParams} />
               <div className="my-4">

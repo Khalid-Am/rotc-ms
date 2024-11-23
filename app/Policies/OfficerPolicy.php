@@ -13,7 +13,7 @@ class OfficerPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->role === 'corps' || $user->role === 's1';
     }
 
     /**

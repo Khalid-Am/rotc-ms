@@ -17,15 +17,17 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shadcn/components/ui/tabs";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import SecondaryButton from "@/Components/SecondaryButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { BLOOD_TYPE_TEXT_MAP } from "@/constants";
-import OfficersAttendanceTable from "./Partials/OfficersAttendanceTable";
+import OfficersAttendanceTable from "../Attendance/Partials/OfficersAttendanceTable";
+import UpdatePasswordForm from "../Profile/Partials/UpdatePasswordForm";
+import DeleteUserForm from "../Profile/Partials/DeleteUserForm";
 
 const Show = ({ officer, attendances }) => {
+  const user = usePage().props.auth.user;
   const [activeTab, setActiveTab] = useState("details");
-
   return (
     <AuthenticatedLayout
       header={
@@ -54,9 +56,18 @@ const Show = ({ officer, attendances }) => {
                 onValueChange={setActiveTab}
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList
+                  className={`grid w-full ${
+                    user.data.officer.id == officer.id
+                      ? "grid-cols-3"
+                      : "grid-cols-2"
+                  }`}
+                >
                   <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="attendance">Attendance</TabsTrigger>
+                  {user.data.officer.id == officer.id && (
+                    <TabsTrigger value="account">Account</TabsTrigger>
+                  )}
                 </TabsList>
                 <TabsContent value="details">
                   <Card>
@@ -227,6 +238,23 @@ const Show = ({ officer, attendances }) => {
                     </CardHeader>
                     <CardContent>
                       <OfficersAttendanceTable attendances={attendances} />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent
+                  value="account"
+                  className="grid md:grid-cols-2 gap-4"
+                >
+                  <Card className="">
+                    <CardContent>
+                      <UpdatePasswordForm className="max-w-lg p-5" />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent className="p-5 space-y-5">
+                      <DeleteUserForm className="max-w-xl" />
                     </CardContent>
                   </Card>
                 </TabsContent>

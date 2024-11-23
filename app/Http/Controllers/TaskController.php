@@ -7,21 +7,29 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TaskController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+
+        $this->authorize('viewAny', Task::class);
+
         $query = Auth::user()->tasks();
 
         $sort_field = request("sort_field", 'created_at');
         $sort_direction = request("sort_direction", 'desc');
 
         if(request("search")){
-            $query->where("title", "like", "%" . request("search") . "%");
+            $query->where(function($query) {
+                $searchTerm = request('search');
+                $query->where('title', 'like', "%{$searchTerm}%");
+            });
         };
 
         if(request("status")){
@@ -52,7 +60,7 @@ class TaskController extends Controller
             }
 
             if(request('due_date') === 'next_week') {
-                $query->whereDate('due_date', now()->addWeek());
+                $query->whereBetween('due_date', [now()->addWeek()->startOfWeek(), now()->addWeek()->endOfWeek()]);
             }
         }
 

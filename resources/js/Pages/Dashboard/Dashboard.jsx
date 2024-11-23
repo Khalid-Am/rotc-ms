@@ -1,11 +1,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import {
   ClockIcon,
   EllipsisHorizontalCircleIcon,
   CheckCircleIcon,
   RectangleStackIcon,
-  PlusIcon,
+  PlusCircleIcon,
+  ArchiveBoxIcon,
 } from "@heroicons/react/16/solid";
 import CardExt_TaskReport from "./Partials/CardExt_TaskReport";
 import {
@@ -16,8 +17,20 @@ import {
   CardTitle,
 } from "@/shadcn/components/ui/card";
 import { Button } from "@/shadcn/components/ui/button";
-import { LucideUsers, PlusCircleIcon } from "lucide-react";
+import { LucideUsers } from "lucide-react";
 import UserTable from "../User/Partials/UserTable";
+import { Calendar } from "@/shadcn/components/ui/calendar";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/shadcn/components/ui/dialog";
+import AttendanceTable from "../Attendance/Partials/AttendanceTable";
 
 export default function Dashboard({
   pendingCount,
@@ -30,8 +43,50 @@ export default function Dashboard({
   queryParams = {},
   isNotCorps,
   isStaff1,
+  attendanceList,
 }) {
-  const currentDate = new Date();
+  queryParams = queryParams || {};
+
+  const [date, setDate] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isToggled, setIsToggled] = useState(queryParams.archived);
+
+  const searchFieldChanged = (name, value) => {
+    if (value) {
+      queryParams[name] = value;
+    } else {
+      delete queryParams[name];
+    }
+    router.get(route("dashboard"), queryParams, {
+      preserveState: true,
+      preserveScroll: true,
+    });
+  };
+
+  const handleArchivedState = () => {
+    setIsToggled((prevState) => {
+      const newState = !prevState;
+
+      searchFieldChanged("archived", newState ? true : null);
+
+      return newState;
+    });
+  };
+
+  const handleDateSelect = (selectedDate) => {
+    setDate(selectedDate);
+    if (selectedDate) {
+      searchFieldChanged(
+        "attendance_date",
+        selectedDate.toLocaleDateString("en-CA")
+      );
+      setIsDialogOpen(true); // Open dialog when a date is selected
+    }
+  };
+  const handleClose = () => {
+    searchFieldChanged("attendance_date", {});
+    setDate(null);
+  };
 
   return (
     <AuthenticatedLayout
@@ -42,7 +97,6 @@ export default function Dashboard({
       }
     >
       <Head title="Dashboard" />
-
       <div className="py-5">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           {/* <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg"> */}
@@ -58,12 +112,12 @@ export default function Dashboard({
                 <Card>
                   <CardHeader>
                     <CardTitle>Tasks</CardTitle>
-                    <CardDescription>Data Count</CardDescription>
+                    <CardDescription></CardDescription>
                   </CardHeader>
                   <CardContent className="px-1 md:px-4">
                     <div
-                      className={`grid gap-2 grid-cols-${
-                        !isNotCorps || !isStaff1 ? "4" : "2"
+                      className={`grid gap-2 grid-cols-2 ${
+                        !isStaff1 && "lg:grid-cols-4"
                       }`}
                     >
                       <CardExt_TaskReport
@@ -114,18 +168,37 @@ export default function Dashboard({
                   <CardHeader>
                     <CardTitle className="flex justify-between items-center">
                       <span>Registered Users</span>
-                      <Link
-                        href={route("register")}
-                        className="flex justify-end"
-                      >
+                      <div className="flex justify-center gap-2">
                         <Button
                           size="sm"
-                          className="bg-gradient-to-b from-green-500 to-green-600 hover:to-green-500"
+                          className="bg-gray-500 hover:bg-gray-600"
+                          onClick={() => handleArchivedState()}
                         >
-                          <PlusIcon className="w-4 pb-[2px] mr-1" />
-                          ADD USER
+                          {!isToggled ? (
+                            <>
+                              <ArchiveBoxIcon className="w-4 h-4 mr-2" />
+                              Archived
+                            </>
+                          ) : (
+                            <>
+                              <RectangleStackIcon className="w-4 h-4 mr-2" />
+                              All
+                            </>
+                          )}
                         </Button>
-                      </Link>
+                        <Link
+                          href={route("register")}
+                          className="flex justify-end"
+                        >
+                          <Button
+                            size="sm"
+                            className="bg-gradient-to-b from-green-500 to-green-600 hover:to-green-700"
+                          >
+                            <PlusCircleIcon className="w-4 pb-[2px] mr-1" />
+                            New User
+                          </Button>
+                        </Link>
+                      </div>
                     </CardTitle>
                     <CardContent className="px-0 pt-4">
                       <UserTable users={users} queryParams={queryParams} />
@@ -147,9 +220,7 @@ export default function Dashboard({
                           <h1 className="text-4xl font-semibold">
                             {officerCount}
                           </h1>
-                          <CardDescription>
-                            Numbers of Registered Officers
-                          </CardDescription>
+                          <CardDescription>Registered Officers</CardDescription>
                         </div>
                       </div>
                     </CardContent>
@@ -160,15 +231,62 @@ export default function Dashboard({
               {/* Attendace Record */}
               {isStaff1 && (
                 <Card>
-                  <CardHeader className="float">
+                  <CardHeader>
                     <CardTitle>Attendance Report</CardTitle>
                     <CardDescription>
-                      Today is
-                      {` ${currentDate.getDate()} ${currentDate.toLocaleString(
-                        "default",
-                        { month: "long" }
-                      )} ${currentDate.getFullYear()}`}
+                      Click on date to show attendace list
                     </CardDescription>
+                    <CardContent className="m-0 p-0">
+                      <div className="pt-5 flex justify-center">
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={handleDateSelect}
+                          className="rounded-md border"
+                        />
+                      </div>
+
+                      {date && (
+                        <Dialog
+                          open={isDialogOpen}
+                          onOpenChange={(open) => !open && handleClose()}
+                        >
+                          <DialogContent className="max-w-xl max-h-[80vh]">
+                            <DialogHeader>
+                              <DialogTitle>Attendance Report as of</DialogTitle>
+                              <DialogDescription>
+                                {` ${date.getDate()} ${date.toLocaleString(
+                                  "default",
+                                  { month: "long" }
+                                )} ${date.getFullYear()}`}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="overflow-x-auto max-h-[50vh]">
+                              <AttendanceTable
+                                attendanceList={attendanceList}
+                              />
+                            </div>
+                            <DialogFooter>
+                              <a
+                                href={route("attendance_list.pdf", {
+                                  attendance_date:
+                                    date.toLocaleDateString("en-CA"),
+                                })}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button
+                                  size="sm"
+                                  className="bg-green-500 hover:bg-green-600"
+                                >
+                                  Print
+                                </Button>
+                              </a>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </CardContent>
                   </CardHeader>
                 </Card>
               )}

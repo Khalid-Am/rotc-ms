@@ -77,18 +77,37 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
 
         if(Auth::user() == $user) {
             Auth::guard('web')->logout();
+
+            $user->delete();
 
             request()->session()->invalidate();
 
             request()->session()->regenerateToken();
 
-            return redirect('/')->with('status', 'Your session has expired. Please log in again');
+            return redirect('welcome')->with('status', 'Your account has been archived. To restore, contact S1 or Corps Commander.');
         }
 
+        $user->delete();
+
         return redirect()->back()->with('success', 'User was successfully archived!');
+    }
+
+    public function restore($id) {
+
+        $user = User::onlyTrashed()->find($id);
+        $user->restore();
+
+        return back()->with('success', 'User was successfully restored!');
+    }
+
+    public function forceDelete($id) 
+    {
+        $user = User::onlyTrashed()->find($id);
+        $user->forceDelete();
+
+        return back()->with('success', 'User was permanently deleted!');
     }
 }

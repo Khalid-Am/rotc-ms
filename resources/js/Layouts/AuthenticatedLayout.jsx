@@ -7,21 +7,6 @@ import { Toaster } from "@/shadcn/components/ui/toaster";
 import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/shadcn/components/ui/dropdown-menu";
-
 export default function AuthenticatedLayout({ header, children }) {
   const user = usePage().props.auth.user;
 
@@ -78,7 +63,9 @@ export default function AuthenticatedLayout({ header, children }) {
                         className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                       >
                         {user.data.officer?.id
-                          ? `${user.data.officer?.firstName} ${user.data.officer?.middleName} ${user.data.officer?.lastName}`
+                          ? `${user.data.officer?.firstName} ${
+                              user.data.officer.middleName ?? ""
+                            } ${user.data.officer?.lastName}`
                           : user.data.role}
 
                         <svg
@@ -106,8 +93,8 @@ export default function AuthenticatedLayout({ header, children }) {
                       </Dropdown.Link>
                     )}
 
-                    <Dropdown.Link href={route("user.edit", user.data.id)}>
-                      Change Password
+                    <Dropdown.Link href={route("activity.log")}>
+                      Activity Log
                     </Dropdown.Link>
 
                     <Dropdown.Link
@@ -198,7 +185,9 @@ export default function AuthenticatedLayout({ header, children }) {
           <div className="border-t border-gray-200 pb-1 pt-4">
             <div className="px-4">
               <div className="text-base font-medium text-gray-800">
-                {`${user.data.officer.firstName} ${user.data.officer.middleName} ${user.data.officer.lastName}`}
+                {`${user.data.officer.firstName} ${
+                  user.data.officer.middleName ?? ""
+                } ${user.data.officer.lastName}`}
               </div>
               <div className="text-sm font-medium text-gray-500">
                 {`USeP ROTC ${ROLE_TEXT_MAP[user.data.role]}`}
@@ -211,8 +200,8 @@ export default function AuthenticatedLayout({ header, children }) {
               >
                 Profile
               </ResponsiveNavLink>
-              <ResponsiveNavLink href={route("user.edit", user.data.id)}>
-                Change Password
+              <ResponsiveNavLink href={route("activity.log")}>
+                Activity Log
               </ResponsiveNavLink>
               <ResponsiveNavLink
                 method="post"

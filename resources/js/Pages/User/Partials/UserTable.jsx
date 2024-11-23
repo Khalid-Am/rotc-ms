@@ -24,6 +24,7 @@ import {
   ArchiveBoxArrowDownIcon,
   ExclamationTriangleIcon,
   UserIcon,
+  ExclamationCircleIcon,
 } from "@heroicons/react/16/solid";
 import { Button } from "@/shadcn/components/ui/button";
 
@@ -41,7 +42,7 @@ import {
 import { useToast } from "@/shadcn/hooks/use-toast";
 
 const UserTable = ({ users, queryParams, status }) => {
-  queryParams = queryParams || {};
+  // queryParams = queryParams || {};
 
   const { toast } = useToast();
   const [flashMessage, setFlashMessage] = useState(null);
@@ -56,10 +57,34 @@ const UserTable = ({ users, queryParams, status }) => {
       preserveScroll: true,
     });
   };
+  const onRestore = (user) => {
+    router.post(
+      route("user.restore", user.id),
+      {},
+      {
+        onSuccess: (page) => {
+          const message = page.props.flash.success;
+          setFlashMessage(message);
+        },
+      }
+    );
+  };
+
+  const onForceDelete = (user) => {
+    router.post(
+      route("user.force_delete", user.id),
+      {},
+      {
+        onSuccess: (page) => {
+          setFlashMessage(page.props.flash.success);
+        },
+      }
+    );
+  };
 
   useEffect(() => {
     if (flashMessage) {
-      toast({ variant: "archived", description: flashMessage, duration: 4000 });
+      toast({ variant: "success", description: flashMessage, duration: 4000 });
       setFlashMessage(null);
     }
   }, [flashMessage, toast]);
@@ -81,7 +106,9 @@ const UserTable = ({ users, queryParams, status }) => {
               <TableCell className="">{user.role}</TableCell>
               <TableCell className="">
                 {user.officer?.id &&
-                  `${user.officer.firstName} ${user.officer?.middleName} ${user.officer.lastName}`}
+                  `${user.officer.firstName} ${
+                    user.officer?.middleName || ""
+                  } ${user.officer.lastName}`}
               </TableCell>
               <TableCell className="">{user.username}</TableCell>
               <TableCell className="text-center">
@@ -95,47 +122,96 @@ const UserTable = ({ users, queryParams, status }) => {
                     <DropdownMenuContent>
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuGroup>
-                        {user.officer?.id ? (
+                      {queryParams.archived ? (
+                        <DropdownMenuGroup>
                           <DropdownMenuItem
-                            className="text-blue-700 focus:text-blue-500 cursor-pointer"
-                            onClick={() =>
-                              router.get(route("officer.show", user.officer.id))
-                            }
+                            className="text-green-700 focus:text-green-500 cursor-pointer"
+                            onClick={() => onRestore(user)}
                           >
                             <EyeIcon />
-                            View
+                            Restore
                           </DropdownMenuItem>
-                        ) : null}
+                          <AlertDialogTrigger asChild>
+                            <DropdownMenuItem className="text-red-700 focus:text-red-500 cursor-pointer">
+                              <ArchiveBoxArrowDownIcon />
+                              Delete
+                            </DropdownMenuItem>
+                          </AlertDialogTrigger>
+                        </DropdownMenuGroup>
+                      ) : (
+                        <DropdownMenuGroup>
+                          {user.officer?.id ? (
+                            <DropdownMenuItem
+                              className="text-blue-700 focus:text-blue-500 cursor-pointer"
+                              onClick={() =>
+                                router.get(
+                                  route("officer.show", user.officer.id)
+                                )
+                              }
+                            >
+                              <EyeIcon />
+                              View
+                            </DropdownMenuItem>
+                          ) : null}
 
-                        <AlertDialogTrigger asChild>
-                          <DropdownMenuItem className="text-green-700 focus:text-green-500 cursor-pointer">
-                            <ArchiveBoxArrowDownIcon />
-                            Archive
-                          </DropdownMenuItem>
-                        </AlertDialogTrigger>
-                      </DropdownMenuGroup>
+                          <AlertDialogTrigger asChild>
+                            <DropdownMenuItem className="text-green-700 focus:text-green-500 cursor-pointer">
+                              <ArchiveBoxArrowDownIcon />
+                              Archive
+                            </DropdownMenuItem>
+                          </AlertDialogTrigger>
+                        </DropdownMenuGroup>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        <ExclamationTriangleIcon className="text-yellow-500 w-5 h-5 mr-2 inline-block" />
-                        Are you sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Archiving this user will also archive all tasks
-                        associated with them. Are you sure you want to proceed?
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleArchive(user)}>
-                        Proceed
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
+                  {!queryParams.archived ? (
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          <ExclamationTriangleIcon className="text-yellow-500 w-5 h-5 mr-2 inline-block" />
+                          Are you sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Archiving this user will also archive all tasks
+                          associated with them. Are you sure you want to
+                          proceed?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleArchive(user)}
+                          className="bg-amber-500 hover:bg-amber-600"
+                        >
+                          Proceed
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  ) : (
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          <ExclamationCircleIcon className="text-red-500 w-5 h-5 mr-2 inline-block" />
+                          Are you sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Once this account is deleted, all of its resources and
+                          data will be permanently deleted. Are you sure you
+                          want to proceed?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => onForceDelete(user)}
+                          className="bg-red-500 hover:bg-red-600"
+                        >
+                          Proceed
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  )}
                 </AlertDialog>
               </TableCell>
             </TableRow>

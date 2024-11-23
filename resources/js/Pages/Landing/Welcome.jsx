@@ -1,5 +1,5 @@
 import { Head, Link } from "@inertiajs/react";
-import AttendanceForm from "./Partials/AttendanceForm";
+import AttendanceForm from "../Attendance/Partials/AttendanceForm";
 import { Toaster } from "@/shadcn/components/ui/toaster";
 import TasksView from "./Partials/TasksView";
 import LoginForm from "../Auth/LoginForm";
@@ -10,7 +10,7 @@ export default function Welcome({ auth, status, tasks, queryParams = null }) {
   queryParams = queryParams || {};
 
   const [motto] = useTypewriter({
-    words: ["Honor", "Duty", "Patriotism"],
+    words: ["Duty", "Honor", "Patriotism"],
     loop: {},
   });
 
@@ -47,19 +47,23 @@ export default function Welcome({ auth, status, tasks, queryParams = null }) {
           <div className="relative flex justify-center items-center w-full max-w-2xl h-1/2 px-6 lg:max-w-7xl">
             <main className="">
               <div className="flex flex-col space-y-5">
-                <span className="uppercase text-[40px] tracking-tight font-extrabold text-center text-amber-500 lg:text-5xl">
+                <span className="uppercase text-[36px] tracking-tight font-extrabold text-center text-amber-600 lg:text-5xl">
                   reserved officer training corps
                 </span>
 
                 <div className="mt-2 text-center">
-                  <span className="uppercase text-2xl">
+                  <span className="uppercase text-2xl text-green-500 font-thin">
                     {motto}
                     <Cursor />
                   </span>
                 </div>
                 <div className="flex gap-3 justify-center mt-10">
-                  <AttendanceForm />
-                  <TasksView tasks={tasks} queryParams={queryParams} />
+                  <AttendanceForm className="bg-green-500 hover:bg-green-600" />
+                  <TasksView
+                    tasks={tasks}
+                    queryParams={queryParams}
+                    className="bg-green-500 hover:bg-green-600"
+                  />
                 </div>
               </div>
             </main>

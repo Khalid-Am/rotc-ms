@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'officer_id' => ['required', 'exists:officers,id'],
             'role' => ['required', Rule::in(['corps', 's1', 's2', 's3', 's4', 's7'])],
-            'username' => 'required|string|lowercase|max:255|unique:'.User::class,
+            'username' => ['required', 'string', 'lowercase', 'max:255', Rule::unique(User::class)->whereNull('deleted_at')],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -62,8 +62,6 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // event(new Registered($user));
-
-        return to_route('user.index');
+        return to_route('dashboard');
     }
 }

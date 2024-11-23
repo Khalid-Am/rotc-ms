@@ -59,6 +59,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('welcome')->with('status', 'You deleted your account. To restore, contact S1 or Corps Commander.');
     }
 }

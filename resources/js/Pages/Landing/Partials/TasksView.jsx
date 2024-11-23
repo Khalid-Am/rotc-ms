@@ -27,7 +27,7 @@ import { Button } from "@/shadcn/components/ui/button";
 import TaskTable from "@/Pages/Task/Partials/TaskTable";
 import Pagination from "@/Components/Pagination";
 
-const TasksView = ({ tasks, queryParams }) => {
+const TasksView = ({ tasks, queryParams, className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("s1");
 
@@ -52,15 +52,17 @@ const TasksView = ({ tasks, queryParams }) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogTrigger asChild>
-        <Button onClick={() => setIsOpen(true)}>Tasks</Button>
+        <Button onClick={() => setIsOpen(true)} className={className}>
+          Tasks
+        </Button>
       </DialogTrigger>
 
-      <DialogContent className="lg:max-w-5xl">
+      <DialogContent className="md:max-w-4xl">
         <DialogHeader>
           <DialogTitle>ROTC TASKS</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div>
+        <div className="overflow-auto">
           <Tabs
             defaultValue={activeTab}
             onValueChange={(value) => {
@@ -155,12 +157,3 @@ const TasksView = ({ tasks, queryParams }) => {
 };
 
 export default TasksView;
-
-{
-  /* <TaskTable
-  tasks={tasks}
-  queryParams={queryParams}
-  showActionColumn={false}
-  showIdColumn={false}
-/>; */
-}

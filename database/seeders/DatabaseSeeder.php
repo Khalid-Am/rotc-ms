@@ -35,7 +35,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('admin12345'),
         ]);
 
-        Task::factory()->count(100)->create();
 
     }
 }
