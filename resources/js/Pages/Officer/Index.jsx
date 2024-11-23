@@ -88,11 +88,13 @@ const Index = ({ officers, queryParams = null }) => {
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
-              <div className="grid items-center lg:grid-cols-2 pb-4">
-                <OfficerFilter queryParams={queryParams} />
-                <div className="flex justify-end">
+              <div className="grid md:grid-cols-2">
+                <div className="">
+                  <OfficerFilter queryParams={queryParams} />
+                </div>
+                <div className="flex justify-start items-start md:justify-end">
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="flex items-center bg-green-400 rounded-md py-1 px-2 text-white text-md hover:bg-green-500">
+                    <DropdownMenuTrigger className="flex items-center bg-green-500 rounded-md py-1 px-2 mt-1 text-white text-sm hover:bg-green-600">
                       Print
                       <ChevronDownIcon className="ml-2 w-4 h-4" />
                     </DropdownMenuTrigger>
