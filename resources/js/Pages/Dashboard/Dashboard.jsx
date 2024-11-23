@@ -105,7 +105,7 @@ export default function Dashboard({
               isNotCorps && !isStaff1 ? "grid-cols-1" : "grid-cols-2"
             }`}
           >
-            {/* Left Wing */}
+            {/* Left Side */}
             <div className="space-y-3">
               {/* Tasks Stats Card */}
               {isNotCorps && (
@@ -162,7 +162,6 @@ export default function Dashboard({
                 </Card>
               )}
 
-              {/* Right Wing */}
               {(!isNotCorps || isStaff1) && (
                 <Card>
                   <CardHeader>
@@ -207,6 +206,8 @@ export default function Dashboard({
                 </Card>
               )}
             </div>
+
+            {/* Right Side */}
             <div className="space-y-3">
               {/* Officer Count Card*/}
               {(!isNotCorps || isStaff1) && (
