@@ -13,7 +13,7 @@ class Officer extends Model
 {
     use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
-    protected $cascadeDeletes = ['user'];
+    protected $cascadeDeletes = ['users'];
 
     protected $dates = ['deleted_at'];
 
