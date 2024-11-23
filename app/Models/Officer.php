@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
 class Officer extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+
+    protected $cascadeDeletes = ['user'];
+
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'student_id',
@@ -33,6 +37,11 @@ class Officer extends Model
     public function attendances() : HasMany 
     {
         return $this->hasMany(Attendance::class, 'officer_id');
+    }
+
+    public function users() :HasMany
+    {
+        return $this->hasMany(User::class, 'officer_id');
     }
 
 }
