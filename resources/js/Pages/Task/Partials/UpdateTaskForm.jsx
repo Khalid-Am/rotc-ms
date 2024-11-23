@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/shadcn/components/ui/select";
 import { TASK_STATUS_TEXT_MAP } from "@/constants";
+import { Button } from "@/shadcn/components/ui/button";
 
 const UpdateTaskForm = ({ children, task, className }) => {
   const { data, setData, post, processing, errors } = useForm({
@@ -133,16 +134,22 @@ const UpdateTaskForm = ({ children, task, className }) => {
 
           <DialogFooter className="mt-2">
             <DialogClose asChild>
-              <SecondaryButton onClick={() => setIsOpen(true)}>
+              <Button
+                onClick={() => setIsOpen(true)}
+                variant="outline"
+                size="sm"
+                className="hover:bg-gray-200"
+              >
                 Close
-              </SecondaryButton>
+              </Button>
             </DialogClose>
-            <PrimaryButton
-              className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
+            <Button
+              className="bg-green-500 hover:bg-green-600 focus:bg-green-600"
+              size="sm"
               disabled={processing}
             >
               Update
-            </PrimaryButton>
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

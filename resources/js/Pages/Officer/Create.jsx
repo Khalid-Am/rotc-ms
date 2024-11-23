@@ -22,10 +22,10 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/shadcn/components/ui/select";
-import PrimaryButton from "@/Components/PrimaryButton";
 import BreadCrumbExt from "@/Components/BreadCrumbExt";
-import SecondaryButton from "@/Components/SecondaryButton";
 import { useToast } from "@/shadcn/hooks/use-toast";
+import { Button } from "@/shadcn/components/ui/button";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 
 const Create = () => {
   const { toast } = useToast();
@@ -456,20 +456,41 @@ const Create = () => {
                     </Card>
                   </TabsContent>
                 </Tabs>
-                <div className="mt-5 flex gap-2 justify-end">
-                  <Link href={route("officer.index")}>
-                    <SecondaryButton>Back</SecondaryButton>
-                  </Link>
+                <div className="mt-5 flex justify-end gap-2">
                   {activeTab === "other" && (
-                    <div className="space-x-2">
-                      <SecondaryButton onClick={handlePreviousTab}>
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePreviousTab}
+                      >
+                        <ChevronLeftIcon className="w-4 h-4" />
                         Previous
-                      </SecondaryButton>
-                      <PrimaryButton disabled={processing}>Add</PrimaryButton>
-                    </div>
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-green-500 hover:bg-green-600 h-9"
+                        disabled={processing}
+                      >
+                        Add
+                      </Button>
+                    </>
                   )}
                   {activeTab === "personal" && (
-                    <PrimaryButton onClick={handleNextTab}>Next</PrimaryButton>
+                    <>
+                      <Link href={route("officer.index")}>
+                        <Button variant="outline" size="sm">
+                          Back
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleNextTab}
+                      >
+                        Next <ChevronRightIcon className="w-4 h-4" />
+                      </Button>
+                    </>
                   )}
                 </div>
               </form>

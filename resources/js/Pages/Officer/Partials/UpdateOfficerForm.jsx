@@ -25,6 +25,8 @@ import {
   SelectLabel,
 } from "@/shadcn/components/ui/select";
 import { BLOOD_TYPE_TEXT_MAP, RANK_TEXT_MAP } from "@/constants";
+import { Button } from "@/shadcn/components/ui/button";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 
 const UpdateOfficerForm = ({ officer, message }) => {
   const { toast } = useToast();
@@ -341,20 +343,44 @@ const UpdateOfficerForm = ({ officer, message }) => {
           </Card>
         </TabsContent>
       </Tabs>
-      <div className="mt-5 flex gap-2 justify-end">
-        <Link href={route("officer.show", officer.id)}>
-          <SecondaryButton>Back</SecondaryButton>
-        </Link>
+      <div className="my-4 flex justify-end gap-2">
         {activeTab === "other" && (
-          <div className="space-x-2">
-            <SecondaryButton onClick={handlePreviousTab}>
+          <>
+            <Button
+              size="sm"
+              variant="outline"
+              className="hover:bg-gray-200"
+              onClick={handlePreviousTab}
+            >
+              <ChevronLeftIcon className="w-4 h-4" />
               Previous
-            </SecondaryButton>
-            <PrimaryButton disabled={processing}>Update</PrimaryButton>
-          </div>
+            </Button>
+            <Button
+              size="sm"
+              className="bg-green-500 hover:bg-green-600"
+              disabled={processing}
+            >
+              Update
+            </Button>
+          </>
         )}
         {activeTab === "personal" && (
-          <SecondaryButton onClick={handleNextTab}>Next</SecondaryButton>
+          <>
+            <Link href={route("officer.show", officer.id)}>
+              <Button size="sm" variant="outline" className="hover:bg-gray-200">
+                Back
+              </Button>
+            </Link>
+            <Button
+              size="sm"
+              variant="outline"
+              className="hover:bg-gray-200"
+              onClick={handleNextTab}
+            >
+              Next
+              <ChevronRightIcon className="h-4 w-4" />
+            </Button>
+          </>
         )}
       </div>
     </form>

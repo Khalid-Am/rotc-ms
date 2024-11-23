@@ -18,8 +18,6 @@ import {
   TabsTrigger,
 } from "@/shadcn/components/ui/tabs";
 import { Head, Link, usePage } from "@inertiajs/react";
-import SecondaryButton from "@/Components/SecondaryButton";
-import PrimaryButton from "@/Components/PrimaryButton";
 import { BLOOD_TYPE_TEXT_MAP } from "@/constants";
 import OfficersAttendanceTable from "../Attendance/Partials/OfficersAttendanceTable";
 import UpdatePasswordForm from "../Profile/Partials/UpdatePasswordForm";
@@ -259,14 +257,27 @@ const Show = ({ officer, attendances }) => {
                   </Card>
                 </TabsContent>
 
-                <CardFooter className="flex justify-end gap-3 my-4">
-                  <Link href={route("officer.index")}>
-                    <SecondaryButton>Back</SecondaryButton>
-                  </Link>
+                <CardFooter className="flex justify-end my-4">
                   {activeTab === "details" && (
-                    <Link href={route("officer.edit", officer.id)}>
-                      <PrimaryButton>Edit</PrimaryButton>
-                    </Link>
+                    <div className="space-x-2">
+                      <Link href={route("officer.index")}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="hover:bg-gray-200"
+                        >
+                          Back
+                        </Button>
+                      </Link>
+                      <Link href={route("officer.edit", officer.id)}>
+                        <Button
+                          size="sm"
+                          className="bg-green-500 hover:bg-green-600"
+                        >
+                          Edit
+                        </Button>
+                      </Link>
+                    </div>
                   )}
                 </CardFooter>
               </Tabs>

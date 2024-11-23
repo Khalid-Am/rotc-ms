@@ -16,7 +16,6 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import { Textarea } from "@/shadcn/components/ui/textarea";
 
@@ -52,7 +51,7 @@ const CreateTaskForm = ({ children }) => {
         <DialogTrigger asChild>
           <Button
             size="sm"
-            className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
+            className="bg-green-500 hover:bg-green-600 focus:bg-green-600"
             onClick={() => {
               setIsOpen(true);
               reset();
@@ -119,16 +118,22 @@ const CreateTaskForm = ({ children }) => {
 
             <DialogFooter className="mt-2">
               <DialogClose asChild>
-                <SecondaryButton onClick={() => setIsOpen(true)}>
+                <Button
+                  onClick={() => setIsOpen(true)}
+                  variant="outline"
+                  className=" hover:bg-gray-200"
+                  size="sm"
+                >
                   Close
-                </SecondaryButton>
+                </Button>
               </DialogClose>
-              <PrimaryButton
-                className="bg-green-700 hover:bg-green-500 focus:bg-green-700"
+              <Button
+                className="bg-green-500 hover:bg-green-600 focus:bg-green-600"
+                size="sm"
                 disabled={processing}
               >
                 Add
-              </PrimaryButton>
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

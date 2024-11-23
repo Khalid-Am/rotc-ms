@@ -44,7 +44,7 @@ const Index = ({ tasks, queryParams = null }) => {
           <div className="flex gap-3 justify-end">
             <Button
               size="sm"
-              className="bg-gray-500 hover:bg-gray-400"
+              className="bg-gray-500 hover:bg-gray-600"
               onClick={() => handleArchivedState()}
             >
               {!isToggled ? (
